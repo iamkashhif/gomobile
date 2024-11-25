@@ -135,11 +135,11 @@ const CompanyManagementHome = () => {
 
         <CompanyTable />
 
-        <Pagination
+        {!!ordersData?.data?.length && <Pagination
           currentPage={page}
           totalPages={ordersData?.totalPages}
           onPageChange={handlePageChange}
-        />
+        />}
       </div>
     </div>
   );

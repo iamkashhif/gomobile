@@ -31,7 +31,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
   return (
     <div className="p-4 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      {/* <div className="flex justify-between items-center mb-6">
         <div>
           <img src="/assets/carid.png" alt="logo" className="h-20" />
         </div>
@@ -40,7 +40,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
           <p>{orderData?.vendor?.name || "vendor 1"}</p>
           <p>{orderData?.vendor?.address || "vendor 2"}</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Order Details */}
       <div className="flex justify-between items-center mb-6">

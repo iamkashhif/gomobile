@@ -113,11 +113,11 @@ const FranchiseManagementHome = () => {
 
         <FranchiseTable />
 
-        <Pagination
+        {!!usersData?.data?.length && <Pagination
           currentPage={page}
           totalPages={usersData?.totalPages}
           onPageChange={handlePageChange}
-        />
+        />}
       </div>
     </div>
   );
