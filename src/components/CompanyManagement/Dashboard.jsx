@@ -12,10 +12,10 @@ const Dashboard = () => {
   );
 
   const cards = [
-    { id: 1, value: DashboardData?.userCount || "00", title: "No. of Users" },
-    { id: 2, value: DashboardData?.orderCount || "00", title: "No. of Orders" },
-    { id: 3, value: "00", title: "No. of Franchise" },
-    { id: 4, value: "00", title: "No. of Franchise" },
+    { id: 1, value: DashboardData?.userCount || "00", title: "Total Users" },
+    { id: 2, value: DashboardData?.orderCount || "00", title: "Total Orders" },
+    { id: 3, value: "00", title: "Shipped Orders" },
+    { id: 4, value: "00", title: "Awaiting to Ship" },
   ];
 
   useEffect(() => {

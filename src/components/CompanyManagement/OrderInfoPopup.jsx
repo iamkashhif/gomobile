@@ -14,9 +14,9 @@ const OrderPopup = ({ isModalOpen, handleCloseModal, orderId }) => {
 
   return (
     <PopupModal id="example1" isOpen={isModalOpen} onClose={handleCloseModal}>
-      { Object.keys(orderData || {}).length && (
+      {Object.keys(orderData || {}).length ? (
         <PurchaseOrder orderData={orderData} orderloading={orderloading} />
-      )}
+      ) : null}
     </PopupModal>
   );
 };

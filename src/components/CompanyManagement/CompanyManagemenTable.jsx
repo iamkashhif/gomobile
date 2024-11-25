@@ -124,7 +124,7 @@ const CompanyTable = () => {
               </tr>
             </thead>
             <tbody>
-              {ordersData?.data?.length &&
+              {!!ordersData?.data?.length &&
                 ordersData?.data.map((item, index) => (
                   <tr key={index}>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
@@ -265,9 +265,9 @@ const CompanyTable = () => {
                               : "border-gray-300"
                           }`}
                       >
-                        <option value="Created">Created</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Completed">Completed</option>
+                        {/* <option value="Created">Created</option> */}
+                        {/* <option value="Pending">Pending</option> */}
+                        {/* <option value="Completed">Completed</option> */}
                         <option value="Shipped">Shipped</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
