@@ -22,8 +22,9 @@ const ordersSlice = createSlice({
     builder
       //get-user
       .addCase(fetchOrders.pending, (state) => {
-        state.ordersloading = true;
+        state.ordersloading = true
         state.error = null;
+        state.ordersData = null;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.ordersData = action.payload;
@@ -41,6 +42,10 @@ const ordersSlice = createSlice({
       })
       .addCase(getOrderById.fulfilled, (state, action) => {
         state.orderData = action.payload;
+        state.orderloading = false;
+      })
+      .addCase(getOrderById.rejected, (state, action) => {
+        // state.orderData = action.payload;
         state.orderloading = false;
       });
   },

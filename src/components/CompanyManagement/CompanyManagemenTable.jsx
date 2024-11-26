@@ -6,6 +6,7 @@ import OrderPopup from "./OrderInfoPopup";
 // import { openModal } from "../Modal/Modal";
 import { fetchUsers } from "../../rtk/users/userThunks";
 import { updateOrderById } from "../../rtk/orders/ordersThunks";
+import CircularLoader from "../tables/Loader";
 
 // const data = [
 //   {
@@ -47,14 +48,13 @@ import { updateOrderById } from "../../rtk/orders/ordersThunks";
 //   // Add more data as needed
 // ];
 
-const { role } = JSON.parse(localStorage?.getItem("userDetails")) || "";
-
 const CompanyTable = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [data, setData] = useState("");
   const dispatch = useDispatch();
 
-  const { ordersData } = useSelector((state) => state.orders);
+  const { profileData } = useSelector((state) => state.profile);
+  const { ordersData, ordersloading } = useSelector((state) => state.orders);
   const { usersData } = useSelector((state) => state.users);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const CompanyTable = () => {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
                   Order&nbsp;total
                 </th>
-                {role === "Admin" && (
+                {profileData?.role === "Admin" && (
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
                     Assigned To
                   </th>
@@ -123,6 +123,7 @@ const CompanyTable = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody>
               {!!ordersData?.data?.length &&
                 ordersData?.data.map((item, index) => (
@@ -132,11 +133,7 @@ const CompanyTable = () => {
                         {index + 1}
                       </p>
                     </td>
-                    {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
-                      <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
-                        {item.customerId}
-                      </p>
-                    </td> */}
+
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
                         {item.internalOrderId}
@@ -157,7 +154,7 @@ const CompanyTable = () => {
                         {item.orderTotal}
                       </p>
                     </td>
-                    {role === "Admin" && (
+                    {profileData?.role === "Admin" && (
                       <td className="px-5 py-3 border-b border-gray-200 bg-white text-xs">
                         {/* <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
                         {item.assignedFranchiseId ? "asiggned" : "unassinged"}
@@ -181,14 +178,10 @@ const CompanyTable = () => {
                             }
                           }}
                           name="asiggned"
-                          className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-customTextGrey1 sm:text-xs"
+                          className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-gray-300 sm:text-xs"
                         >
                           <option value={"unassigned"}>Unassinged</option>
                           {usersData?.data?.map((el) => {
-                            console.log(
-                              "el.id",
-                              el.id === item.assignedFranchiseId
-                            );
                             return (
                               <option value={el.id}>{el.legal_name}</option>
                             );
@@ -197,17 +190,24 @@ const CompanyTable = () => {
                       </td>
                     )}
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
-                      <p className="opacity-85 font-semibold whitespace-no-wrap bg-customNavy px-3 py-2 text-center text-white rounded-md mx-auto pointer hover:scale-105">
-                        {item.requestedShippingLabel ? "Raised" : "Request"}
-                      </p>
-                      {/* <select
-                        name="asiggned"
-                        className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-customTextGrey1 sm:text-xs"
+                      <p
+                        onClick={() => {
+                          if (!item.requestedShippingLabel) {
+                            dispatch(
+                              updateOrderById({
+                                orderId: item.id,
+                                keyObjNeedsTobeUpdate: {
+                                  requestedShippingLabel: true,
+                                },
+                                dispatch,
+                              })
+                            );
+                          }
+                        }}
+                        className="opacity-85 font-semibold whitespace-no-wrap bg-customNavy px-3 py-2 text-center text-white rounded-md mx-auto pointer hover:scale-105"
                       >
-                        <option>Label</option>
-                        <option value={1}>Requested for Shipping</option>
-                        <option value={2}>Raised</option>
-                      </select> */}
+                        {item.requestedShippingLabel ? "Requested" : "Request"}
+                      </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       {/*<span
@@ -251,19 +251,15 @@ const CompanyTable = () => {
                           }
                         }}
                         // className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-customTextGrey1 sm:text-xs bg-red-100"
-                        className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs 
-                          ${
-                            item.status === "Created"
-                              ? "bg-white border border-gray-200"
-                              : item.status === "Cancelled"
-                              ? "bg-red-100 border-red-500"
-                              : item.status === "Shipped" ||
-                                item.status === "Completed"
-                              ? "bg-green-100 border-green-500"
-                              : item.status === "Pending"
-                              ? "bg-orange-100 border-orange-500"
-                              : "border-gray-300"
-                          }`}
+                        className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs border border-gray-300`}
+                        // ${
+                        //   item.status === "Shipped"
+                        //     ? "bg-green-100 border-green-500"
+                        //     : item.status === "Pending"
+                        //     ? "bg-orange-100 border-orange-500"
+                        //     : "border-gray-300"
+                        // }
+                        // `}
                       >
                         {/* <option value="Created">Created</option> */}
                         {/* <option value="Pending">Pending</option> */}
@@ -339,6 +335,12 @@ const CompanyTable = () => {
                 ))}
             </tbody>
           </table>
+
+          {ordersloading && (
+            <div className="w-full h-full flex items-center justify-center my-32">
+              <CircularLoader />
+            </div>
+          )}
         </div>
       </div>
 

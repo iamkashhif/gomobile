@@ -25,6 +25,7 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.pending, (state) => {
         state.userloading = true;
         state.error = null;
+        state.usersData = null;
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.usersData = action.payload;
@@ -42,6 +43,9 @@ const usersSlice = createSlice({
       .addCase(postUsers.fulfilled, (state, action) => {
         state.postloading = false;
       })
+      .addCase(postUsers.rejected, (state, action) => {
+        state.postloading = false;
+      })
 
       // get-single-user
       .addCase(fetchUser.pending, (state) => {
@@ -51,6 +55,10 @@ const usersSlice = createSlice({
         state.userloading = false;
         state.userData = action.payload;
       })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.userloading = false;
+        // state.userData = action.payload;
+      })
 
       //fetchDashboard
       .addCase(fetchDashboard.pending, (state) => {
@@ -59,6 +67,10 @@ const usersSlice = createSlice({
       .addCase(fetchDashboard.fulfilled, (state, action) => {
         state.DashboardLoading = false;
         state.DashboardData = action.payload;
+      })
+      .addCase(fetchDashboard.rejected, (state, action) => {
+        state.DashboardLoading = false;
+        // state.DashboardData = action.payload;
       });
   },
 });

@@ -10,13 +10,26 @@ const Dashboard = () => {
   const { DashboardData, DashboardLoading } = useSelector(
     (state) => state.users
   );
+  const { profileData } = useSelector((state) => state.profile);
 
   const cards = [
-    { id: 1, value: DashboardData?.userCount || "00", title: "Total Users" },
-    { id: 2, value: DashboardData?.orderCount || "00", title: "Total Orders" },
-    { id: 3, value: "00", title: "Shipped Orders" },
-    { id: 4, value: "00", title: "Awaiting to Ship" },
-  ];
+    profileData.role === "Admin" && {
+      id: 1,
+      value: DashboardData?.userCount || "0",
+      title: "Total Users",
+    },
+    { id: 2, value: DashboardData?.orderCount || "0", title: "Total Orders" },
+    {
+      id: 3,
+      value: DashboardData?.shippedOrderCount || "0",
+      title: "Shipped Orders",
+    },
+    {
+      id: 4,
+      value: DashboardData?.pendingOrderCount || "0",
+      title: "Awaiting to Ship",
+    },
+  ].filter(Boolean);
 
   useEffect(() => {
     dispatch(fetchDashboard());
@@ -25,7 +38,7 @@ const Dashboard = () => {
   return (
     <div className="">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full gap-5 p-6 pointer">
-        {cards.map((card) => (
+        {cards?.map((card) => (
           <div
             key={card.id}
             className="bg-white shadow-md rounded-lg px-5 py-8 hover:shadow-xl transition-shadow duration-300 h-36 min-w-56 flex flex-col justify-between"

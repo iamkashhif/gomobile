@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, updateUsers } from "../../rtk/users/userThunks";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import CircularLoader from "../tables/Loader";
 
 // const data = [
 //   {
@@ -78,7 +79,7 @@ import { FaEdit } from "react-icons/fa";
 
 const FranchiseTable = () => {
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { usersData } = useSelector((state) => state.users);
+  const { usersData, userloading } = useSelector((state) => state.users);
   const [isOpen, setIsOpen] = useState(null); // Track which dropdown is open
 
   const toggleDropdown = (id) => {
@@ -373,6 +374,12 @@ const FranchiseTable = () => {
               ))}
             </tbody>
           </table>
+
+          {userloading && (
+            <div className="w-full h-full flex items-center justify-center my-32">
+              <CircularLoader />
+            </div>
+          )}
         </div>
       </div>
     </div>

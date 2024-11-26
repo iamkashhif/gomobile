@@ -2,27 +2,36 @@ import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaUserCircle } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProfile } from "../../rtk/auth/profileInfoThunk";
 // import { BsPersonFillGear } from "react-icons/bs";
 // import { IoMdSettings } from "react-icons/io";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const [showCalendar, setShowCalendar] = useState(false);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [UserInfo, setUserInfo] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
+  const { profileData } = useSelector((state) => state.profile);
 
   useEffect(() => {
-    const localData = JSON.parse(localStorage?.getItem("userDetails") || {});
-    setUserInfo(localData);
-    if (!localData?.role) {
-      navigate("/");
-    }
+    // if(profileData){
+    dispatch(fetchProfile());
+    // }
   }, []);
+
+  // useEffect(() => {
+  //   if (!profileData?.role) {
+  //     navigate("/");
+  //   }
+  // }, [profileData]);
 
   const menu = [
     { label: "Dashboard", path: "/admin", icon: <MdDashboard /> },
-    UserInfo.role === "Admin" && {
+    profileData.role === "Admin" && {
       label: "User  ",
       path: "/admin/franchise-management",
       icon: (
@@ -159,20 +168,25 @@ const Sidebar = () => {
                 </g>
               </svg> */}
 
-              <FaCalendarAlt />
+              {/* <FaCalendarAlt
+                onClick={() => {
+                  setShowCalendar(true);
+                }}
+              />
+              <input type="date"/> */}
 
               {/* Profile Dropdown */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setDropdownOpen(true)}
-                  className="flex items-center  space-x-2 md:mr-1 text-xs focus:outline-none mr-8 max-w-46 min-w-32"
+                  className="flex items-center space-x-2 md:mr-1 text-xs focus:outline-none mr-8"
                 >
                   <FaUserCircle className="text-customTextGrey2 lg:text-4xl text-2xl" />
-                  <div className="hidden  text-start lg:block font-opensans font-semibold  text-customGrey3">
-                    {UserInfo.role}
+                  <div className="hidden text-start lg:block font-opensans font-semibold  text-customGrey3">
+                    {profileData?.role}
                     <br />
                     <span className="  text-customBlack font-opensans font-bold capitalize">
-                      {UserInfo.legal_name}
+                      {profileData?.legal_name}
                     </span>
                   </div>
                 </button>
@@ -185,7 +199,7 @@ const Sidebar = () => {
                   >
                     <div className="px-4 py-1">
                       <p className="text-xs font-semibold text-zinc-700 py-1.5">
-                        {UserInfo.email}
+                        {profileData?.email}
                       </p>
                     </div>
                     <hr className="border-gray-200 dark:border-gray-200" />

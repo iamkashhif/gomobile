@@ -16,7 +16,9 @@ const OrderPopup = ({ isModalOpen, handleCloseModal, orderId }) => {
     <PopupModal id="example1" isOpen={isModalOpen} onClose={handleCloseModal}>
       {Object.keys(orderData || {}).length ? (
         <PurchaseOrder orderData={orderData} orderloading={orderloading} />
-      ) : null}
+      ) : (
+        <CircularLoader />
+      )}
     </PopupModal>
   );
 };
@@ -31,6 +33,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
   return (
     <div className="p-4 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
       {/* Header */}
+      
       {/* <div className="flex justify-between items-center mb-6">
         <div>
           <img src="/assets/carid.png" alt="logo" className="h-20" />

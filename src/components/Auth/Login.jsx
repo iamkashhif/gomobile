@@ -56,17 +56,18 @@ const Login = ({ setActiveComponent }) => {
       //   headers: { "Content-Type": "application/json" },
       //   body: JSON.stringify(formData),
       // });
-      const response = await post(`/auth/login`, 
-         formData
-      )
+      const response = await post(`/auth/login`, formData);
 
       // const data = await response.json();
       if (response.status === 200) {
         localStorage.setItem("token", response.data.results.token);
-        localStorage.setItem("userDetails", JSON.stringify(response.data.results));
+        localStorage.setItem(
+          "userDetails",
+          JSON.stringify(response.data.results)
+        );
         // dispatch(fetchUser({ id: data.results.id }));
         toast.success("Login Successful");
-        navigate("/admin");
+        navigate(`/admin`);
       } else {
         setErrors({
           ...errors,
