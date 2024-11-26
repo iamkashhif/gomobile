@@ -195,6 +195,8 @@ const CompanyTable = () => {
                           if (!item.requestedShippingLabel) {
                             dispatch(
                               updateOrderById({
+                                shipLabel: true,
+                                profileData: profileData,
                                 orderId: item.id,
                                 keyObjNeedsTobeUpdate: {
                                   requestedShippingLabel: true,

@@ -45,14 +45,38 @@ export const getOrderById = createAsyncThunk(
 
 export const updateOrderById = createAsyncThunk(
   "orders/updateOrderById",
-  async ({ orderId, keyObjNeedsTobeUpdate, dispatch }, thunkAPI) => {
+  async (
+    {
+      orderId,
+      keyObjNeedsTobeUpdate,
+      dispatch,
+      shipLabel = false,
+      profileData = {},
+    },
+    thunkAPI
+  ) => {
     try {
       const obj = {
         order: {
           ...keyObjNeedsTobeUpdate,
         },
       };
-      const response = await put(`/order/update/${orderId}`, obj);
+
+      const obj1 = {
+        shippingLabel: {
+          orderId: orderId,
+          userId: profileData.id,
+          requestedDate: new Date(),
+        },
+        order: {
+          ...keyObjNeedsTobeUpdate,
+        },
+      };
+
+      const response = await put(
+        `/order/update/${orderId}`,
+        shipLabel ? obj1 : obj
+      );
       if (response.data && response.data.results) {
         dispatch(fetchOrders({ search: "" }));
         toast.success("Updated");
