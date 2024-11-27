@@ -206,8 +206,15 @@ const CompanyTable = () => {
                             );
                           }
                         }}
-                        className="opacity-85 font-semibold whitespace-no-wrap bg-customNavy px-3 py-2 text-center text-white rounded-md mx-auto pointer hover:scale-105"
+                        className={`inline-flex items-center gap-2 opacity-85 font-semibold whitespace-no-wrap px-3 py-2 text-center text-black rounded-md mx-auto pointer hover:scale-105`}
                       >
+                        <div
+                          className={`${
+                            item.requestedShippingLabel
+                              ? "bg-orange-500"
+                              : "bg-blue-700"
+                          } h-2 w-2 rounded-full`}
+                        ></div>
                         {item.requestedShippingLabel ? "Requested" : "Request"}
                       </p>
                     </td>
@@ -266,6 +273,11 @@ const CompanyTable = () => {
                         {/* <option value="Created">Created</option> */}
                         {/* <option value="Pending">Pending</option> */}
                         {/* <option value="Completed">Completed</option> */}
+
+                        <option value="OnHold">OnHold</option>
+                        <option value="Ordered" disabled>
+                          Ordered
+                        </option>
                         <option value="Shipped">Shipped</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
