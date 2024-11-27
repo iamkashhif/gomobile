@@ -110,7 +110,7 @@ const Sidebar = () => {
               </button> */}
 
               <a href="#" className="flex ml-2 md:mr-14 lg:mr-24">
-                <img src="/home_images/Logo.png" alt="Logo" className="w-28" />
+                <img src="/home_images/Logo.png" alt="Logo" className="w-32" />
               </a>
               {/* <div className="mx-3 relative hidden md:block">
                 <input
@@ -182,10 +182,10 @@ const Sidebar = () => {
                   className="flex items-center space-x-2 md:mr-1 text-xs focus:outline-none mr-8"
                 >
                   <FaUserCircle className="text-customTextGrey2 lg:text-4xl text-2xl" />
-                  <div className="hidden text-start lg:block font-opensans font-semibold  text-customGrey3">
+                  <div className="hidden text-start lg:block font-opensans font-semibold text-customGrey3">
                     {profileData?.role}
                     <br />
-                    <span className="  text-customBlack font-opensans font-bold capitalize">
+                    <span className="text-customBlack font-opensans font-bold capitalize">
                       {profileData?.legal_name}
                     </span>
                   </div>
@@ -220,7 +220,7 @@ const Sidebar = () => {
                         localStorage.clear();
                         window.location.href = "/";
                       }}
-                      className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-600 pointer "
+                      className="block px-4 py-2 text-xs text-gray-700 hover:bg-red-100 dark:text-gray-600 pointer "
                     >
                       Logout
                     </div>
@@ -277,8 +277,8 @@ const Sidebar = () => {
                   to={menu.path}
                   className={`flex rounded-l-sm items-center p-3 text-gray-900 hover:bg-customGrey5 group ${
                     location.pathname === menu.path
-                      ? "border-l-4   bg-customGrey border-customBlue pl-3" // Active state with left padding and rounded right border
-                      : "pl-4" // Left padding to offset the border width when inactive
+                      ? "border-l-4  bg-customGrey border-customBlue pl-3"
+                      : "pl-4"
                   }`}
                 >
                   <span className="w-5 mt-1 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">

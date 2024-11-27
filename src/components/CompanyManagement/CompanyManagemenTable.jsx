@@ -7,6 +7,8 @@ import OrderPopup from "./OrderInfoPopup";
 import { fetchUsers } from "../../rtk/users/userThunks";
 import { updateOrderById } from "../../rtk/orders/ordersThunks";
 import CircularLoader from "../tables/Loader";
+import { FaRegFilePdf } from "react-icons/fa";
+const BASE_URL = import.meta.env.VITE_APP_BASE_LIVE_URL;
 
 // const data = [
 //   {
@@ -51,10 +53,14 @@ import CircularLoader from "../tables/Loader";
 const CompanyTable = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [data, setData] = useState("");
+  const [Index, setIndex] = useState();
+
   const dispatch = useDispatch();
 
   const { profileData } = useSelector((state) => state.profile);
-  const { ordersData, ordersloading } = useSelector((state) => state.orders);
+  const { ordersData, ordersloading, updateOrderByIdLoading } = useSelector(
+    (state) => state.orders
+  );
   const { usersData } = useSelector((state) => state.users);
 
   useEffect(() => {
@@ -156,14 +162,9 @@ const CompanyTable = () => {
                     </td>
                     {profileData?.role === "Admin" && (
                       <td className="px-5 py-3 border-b border-gray-200 bg-white text-xs">
-                        {/* <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
-                        {item.assignedFranchiseId ? "asiggned" : "unassinged"}
-                      </p> */}
-
                         <select
                           value={item.assignedFranchiseId}
                           onChange={(e) => {
-                            // console.log({e: })
                             const id = e.target.value;
                             if (id) {
                               dispatch(
@@ -190,57 +191,55 @@ const CompanyTable = () => {
                       </td>
                     )}
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
-                      <p
-                        onClick={() => {
-                          if (!item.requestedShippingLabel) {
-                            dispatch(
-                              updateOrderById({
-                                shipLabel: true,
-                                profileData: profileData,
-                                orderId: item.id,
-                                keyObjNeedsTobeUpdate: {
-                                  requestedShippingLabel: true,
-                                },
-                                dispatch,
-                              })
-                            );
-                          }
-                        }}
-                        className={`inline-flex items-center gap-2 opacity-85 font-semibold whitespace-no-wrap px-3 py-2 text-center text-black rounded-md mx-auto pointer hover:scale-105`}
-                      >
-                        <div
-                          className={`${
-                            item.requestedShippingLabel
-                              ? "bg-orange-500"
-                              : "bg-blue-700"
-                          } h-2 w-2 rounded-full`}
-                        ></div>
-                        {item.requestedShippingLabel ? "Requested" : "Request"}
-                      </p>
-                    </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
-                      {/*<span
-                        className={`relative inline-flex items-center px-3 py-1 font-semibold leading-tight ${
-                          item.status === "Active"
-                            ? "text-customGreen1"
-                            : "text-customRed1"
-                        }`}
-                      >
-                        <span
-                          className={`absolute inset-y-0 left-0 w-2 h-2 rounded-full ${
-                            item.status === "Active"
-                              ? "bg-customGreen1"
-                              : "bg-customRed1"
+                      {item?.shippingLabel?.filePath ? (
+                        <a
+                          href={`${BASE_URL}/${item?.shippingLabel?.filePath}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-full"
+                        >
+                          <FaRegFilePdf className="text-xl text-red-600 hover:scale-110" />
+                        </a>
+                      ) : (
+                        <p
+                          onClick={() => {
+                            if (!item.requestedShippingLabel) {
+                              setIndex(index);
+                              dispatch(
+                                updateOrderById({
+                                  dispatch,
+                                  shipLabel: true,
+                                  profileData: profileData,
+                                  orderId: item.id,
+                                  keyObjNeedsTobeUpdate: {
+                                    requestedShippingLabel: true,
+                                  },
+                                })
+                              );
+                            }
+                          }}
+                          className={`inline-flex items-center gap-2 font-semibold whitespace-nowrap px-3 py-2 text-center text-black rounded-md mx-auto cursor-pointer hover:scale-105 ${
+                            item.requestedShippingLabel ? "opacity-70" : ""
                           }`}
-                          style={{
-                            marginLeft: "-0.15rem",
-                            marginTop: "0.55rem",
-                          }} 
-                        ></span>
-                         <span className="relative">{item.status}</span>
-                         </span>
-                         */}
+                        >
+                          <div
+                            className={`${
+                              item.requestedShippingLabel
+                                ? "bg-orange-500"
+                                : "bg-blue-700"
+                            } h-2 w-2 rounded-full`}
+                          ></div>
 
+                          {updateOrderByIdLoading && index === Index
+                            ? "Requesting"
+                            : item.requestedShippingLabel
+                            ? "Requested"
+                            : "Request"}
+                        </p>
+                      )}
+                    </td>
+
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       <select
                         name="asiggned"
                         value={item.status}
@@ -259,7 +258,6 @@ const CompanyTable = () => {
                             );
                           }
                         }}
-                        // className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-customTextGrey1 sm:text-xs bg-red-100"
                         className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs border border-gray-300`}
                         // ${
                         //   item.status === "Shipped"

@@ -367,7 +367,7 @@ const FranchiseTable = () => {
                     <Link
                       to={`/admin/franchise-management/edit-franchise/${item.id}`}
                     >
-                      <FaEdit className="text-customGrey3 text-lg" />
+                      <FaEdit className="text-customGrey3 text-lg hover:scale-110" />
                     </Link>
                   </td>
                 </tr>

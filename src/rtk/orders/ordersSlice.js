@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchOrders, getOrderById } from "./ordersThunks";
+import { fetchOrders, getOrderById, updateOrderById } from "./ordersThunks";
 
 // Async thunk to fetch users
 const initialState = {
   ordersData: {},
   ordersloading: false,
+  updateOrderByIdLoading: false,
 
   orderData: {},
   orderloading: false,
@@ -22,7 +23,7 @@ const ordersSlice = createSlice({
     builder
       //get-user
       .addCase(fetchOrders.pending, (state) => {
-        state.ordersloading = true
+        state.ordersloading = true;
         state.error = null;
         state.ordersData = null;
       })
@@ -45,8 +46,19 @@ const ordersSlice = createSlice({
         state.orderloading = false;
       })
       .addCase(getOrderById.rejected, (state, action) => {
-        // state.orderData = action.payload;
         state.orderloading = false;
+      })
+
+      // updateOrderById
+      .addCase(updateOrderById.pending, (state) => {
+        state.updateOrderByIdLoading = true;
+        state.error = null;
+      })
+      .addCase(updateOrderById.fulfilled, (state, action) => {
+        state.updateOrderByIdLoading = false;
+      })
+      .addCase(updateOrderById.rejected, (state, action) => {
+        state.updateOrderByIdLoading = false;
       });
   },
 });
