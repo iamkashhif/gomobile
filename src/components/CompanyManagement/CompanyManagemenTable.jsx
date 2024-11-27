@@ -193,7 +193,8 @@ const CompanyTable = () => {
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       {item?.shippingLabel?.filePath ? (
                         <a
-                          href={`${BASE_URL}/${item?.shippingLabel?.filePath}`}
+                          // href={`${BASE_URL}/${item?.shippingLabel?.filePath}`}
+                          href="https://backend.landrise.in/brochures/leads_export%20(2).pdf"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center w-full"
