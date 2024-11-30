@@ -182,9 +182,9 @@ const CompanyTable = () => {
                           className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-gray-300 sm:text-xs"
                         >
                           <option value={"unassigned"}>Unassinged</option>
-                          {usersData?.data?.map((el) => {
+                          {usersData?.data?.map((el, ind) => {
                             return (
-                              <option value={el.id}>{el.legal_name}</option>
+                              <option key={ind} value={el.id}>{el.legal_name}</option>
                             );
                           })}
                         </select>

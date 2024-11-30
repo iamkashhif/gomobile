@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaSearch, FaChevronDown } from "react-icons/fa";
+import { FaSearch, FaChevronDown, FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import AddNewCompany from "./AddNewCompany";
 import CompanyTable from "../../components/CompanyManagement/CompanyManagemenTable";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "../../rtk/orders/ordersThunks";
 import Pagination from "../../components/tables/Pagination";
+import { debounce } from "lodash";
 
 // const data = [
 //   {
@@ -41,7 +42,12 @@ import Pagination from "../../components/tables/Pagination";
 
 const CompanyManagementHome = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [searchCriteria, setSearchCriteria] = useState({
+    search: "",
+    searchByDate: "",
+    searchByFranchiseOrUser: "",
+    searchByStatus: "",
+  });
   const { ordersData } = useSelector((state) => state.orders);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -60,25 +66,30 @@ const CompanyManagementHome = () => {
     setIsOpen(isOpen === id ? null : id); // Toggle dropdown for a specific row
   };
 
-  const debounceTimeout = useRef(null);
+  const debounceDispatch = useRef(
+    debounce((criteria) => {
+      dispatch(fetchOrders({ ...criteria, page, perPage }));
+    }, 500)
+  );
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    clearTimeout(debounceTimeout.current);
-
-    debounceTimeout.current = setTimeout(() => {
-      console.log({ value });
-      dispatch(fetchOrders({ search: value }));
-    }, 500);
+    const { name, value } = e.target;
+    setSearchCriteria((prev) => {
+      const updatedCriteria = { ...prev, [name]: value };
+      debounceDispatch.current(updatedCriteria);
+      return updatedCriteria;
+    });
   };
+
   useEffect(() => {
-    dispatch(fetchOrders({ search: "", page, perPage }));
-  }, []);
+    // Initial fetch with default criteria
+    dispatch(fetchOrders({ ...searchCriteria, page, perPage }));
+  }, [dispatch, page, perPage]);
 
   return (
     <div className="bg-customGrey">
       <div className="m-3 h-[84.5vh] bg-white rounded-lg">
+        {/* Page Title */}
         <div className="flex flex-row mb-4 px-6 pt-6 sm:mb-0 justify-between w-full">
           <div className="flex items-center">
             <svg
@@ -111,35 +122,72 @@ const CompanyManagementHome = () => {
             </Link>
           </div> */}
         </div>
-
-        <div className="flex flex-row items-center justify-between mt-5 mb-4 px-5">
-          {/* Search Section */}
-          <div className="flex flex-col md:mb-0">
-            {/* <label className="text-sm font-opensans font-semibold text-customTextGrey1">
-              Search
-            </label> */}
+        {/* filters */}
+        <div className=" mt-5 mb-4 px-5 w-full">
+          <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:mb-0">
             <div className="relative">
-              <input
-                type="text"
-                placeholder="Search here"
-                className="border-b-2 text-xs focus:outline-none font-semibold pl-5 pb-2"
-                value={search}
-                onChange={handleChange}
-              />
-              <span className="absolute inset-y-0 flex items-center text-customGrey4">
+              <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
                 <FaSearch className="text-customGrey3 text-xs" />
               </span>
+              <input
+                type="text"
+                placeholder="Type to search"
+                name="search"
+                className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
+                value={searchCriteria.search}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="relative">
+              <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
+                <FaSearch className="text-customGrey3 text-xs" />
+              </span>
+              <input
+                type="text"
+                placeholder="Search for a user or franchise"
+                className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
+                name="searchByFranchiseOrUser"
+                value={searchCriteria.searchByFranchiseOrUser}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="relative">
+              <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
+                <FaSearch className="text-customGrey3 text-xs" />
+              </span>
+              <input
+                type="text"
+                placeholder="Search for a status"
+                className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
+                name="searchByStatus"
+                value={searchCriteria.searchByStatus}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="relative">
+              <input
+                type="date"
+                className="border-b-2 text-xs focus:outline-none font-semibold pb-2 pl-1 w-full text-gray-500"
+                name="searchByDate"
+                value={searchCriteria.searchByDate}
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
 
         <CompanyTable />
 
-        {!!ordersData?.data?.length && <Pagination
-          currentPage={page}
-          totalPages={ordersData?.totalPages}
-          onPageChange={handlePageChange}
-        />}
+        {!!ordersData?.data?.length && (
+          <Pagination
+            currentPage={page}
+            totalPages={ordersData?.totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </div>
   );

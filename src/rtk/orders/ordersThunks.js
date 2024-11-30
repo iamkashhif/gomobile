@@ -4,10 +4,10 @@ import { get, post, put } from "../../../utils/ApiServices";
 
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
-  async ({ search = "", page = 1, perPage = 10 }, thunkAPI) => {
+  async ({ search = "", searchByDate = "", searchByFranchiseOrUser = "", searchByStatus = "", page = 1, perPage = 10 }, thunkAPI) => {
     try {
       const response = await get(
-        `/order/orders?search=${search}&pageNo=${page}&perPage=${perPage}`
+        `/order/orders?search=${search}&searchByDate=${searchByDate}&searchByFranchiseOrUser=${searchByFranchiseOrUser}&searchByStatus=${searchByStatus}&pageNo=${page}&perPage=${perPage}`
       );
       if (
         response.data &&
@@ -19,7 +19,7 @@ export const fetchOrders = createAsyncThunk(
         throw new Error("Invalid response structure");
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching orders:", error);
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
