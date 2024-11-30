@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders } from "../../rtk/orders/ordersThunks";
 import Pagination from "../../components/tables/Pagination";
 import { debounce } from "lodash";
+import { toast } from "react-toastify";
+import OrderInvoicePopup from "../../components/CompanyManagement/OrderInvoicePopup";
 
 // const data = [
 //   {
@@ -48,6 +50,16 @@ const CompanyManagementHome = () => {
     searchByFranchiseOrUser: "",
     searchByStatus: "",
   });
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   const { ordersData } = useSelector((state) => state.orders);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
@@ -56,6 +68,7 @@ const CompanyManagementHome = () => {
   const handlePageChange = (page) => {
     setPage(page);
   };
+
   const toggleDropdown1 = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -85,6 +98,25 @@ const CompanyManagementHome = () => {
     // Initial fetch with default criteria
     dispatch(fetchOrders({ ...searchCriteria, page, perPage }));
   }, [dispatch, page, perPage]);
+
+  // handle Generate Invoice
+  const checkIfAllSameAssignedFranchiseId = selectedItems.every(
+    (order) =>
+      order.item.assignedFranchiseId ===
+      selectedItems[0].item.assignedFranchiseId
+  );
+  const handleGenerateInvoice = () => {
+    if (checkIfAllSameAssignedFranchiseId) {
+      handleOpenModal();
+    } else {
+      toast.error(
+        "The assigned user should be the same to generate the invoice.",
+        {
+          position: "top-center",
+        }
+      );
+    }
+  };
 
   return (
     <div className="bg-customGrey">
@@ -123,7 +155,7 @@ const CompanyManagementHome = () => {
           </div> */}
         </div>
         {/* filters */}
-        <div className=" mt-5 mb-4 px-5 w-full">
+        <div className="mt-5 mb-4 px-5 w-full">
           <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:mb-0">
             <div className="relative">
               <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
@@ -176,10 +208,27 @@ const CompanyManagementHome = () => {
                 onChange={handleChange}
               />
             </div>
+
+            <div className="relative">
+              <button
+                className={`border-b-2 text-xs font-semibold p-2 w-full rounded ${
+                  selectedItems.length === 0
+                    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                    : "bg-customNavy hover:bg-customNavy text-white"
+                }`}
+                onClick={handleGenerateInvoice}
+                disabled={selectedItems.length === 0}
+              >
+                Generate Invoice
+              </button>
+            </div>
           </div>
         </div>
 
-        <CompanyTable />
+        <CompanyTable
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+        />
 
         {!!ordersData?.data?.length && (
           <Pagination
@@ -189,6 +238,11 @@ const CompanyManagementHome = () => {
           />
         )}
       </div>
+      <OrderInvoicePopup
+        isModalOpen={isModalOpen}
+        handleCloseModal={handleCloseModal}
+        data={selectedItems}
+      />
     </div>
   );
 };

@@ -22,7 +22,7 @@ const profileInfoSlice = createSlice({
         console.log({"dddd":action.payload})
       })
       .addCase(fetchProfile.rejected, (state) => {
-        state.ordersloading = false;
+        state.ordersLoading = false;
         state.error = action.payload || "Failed to fetch profile";
       });
   },

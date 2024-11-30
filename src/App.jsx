@@ -143,27 +143,27 @@ const MainContent = () => {
     // </div>
 
     <div>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/forgetpass" element={<ForgotPassword />} />
-        {/* <Route path="/otpcheck" element={<OtpCheck/>}/> */}
-        <Route path="/passwordverify" element={<PasswordVerify />} />
-        {/* <Route path="/dashboardMain" element={<Sidebar/>}/> */}
+     <Routes>
+  <Route path="/" element={<Login />} />
+  <Route path="/forgetpass" element={<ForgotPassword />} />
+  {/* <Route path="/otpcheck" element={<OtpCheck/>}/> */}
+  <Route path="/passwordverify" element={<PasswordVerify />} />
+  {/* <Route path="/dashboardMain" element={<Sidebar/>}/> */}
 
-        <Route element={<PrivateRoutes allowedRoles={["admin"]} />}>
-          <Route
-            path="/admin"
-            element={<DashboardLayout sidebarItems={menus} />}
-          >
-            <Route index element={<Dashboard />} />
-            {menus.map((menu, i) => (
-              <>
-                <Route index path={menu.rPath} element={menu.rElement} />
-              </>
-            ))}
-          </Route>
-        </Route>
-      </Routes>
+  <Route element={<PrivateRoutes allowedRoles={["admin"]} />}>
+    <Route path="/admin" element={<DashboardLayout sidebarItems={menus} />}>
+      <Route index element={<Dashboard />} />
+      {menus.map((menu, i) => (
+        <Route
+          key={i} // Add a key here
+          path={menu.rPath}
+          element={menu.rElement}
+        />
+      ))}
+    </Route>
+  </Route>
+</Routes>
+
     </div>
   );
 };

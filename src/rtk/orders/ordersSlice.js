@@ -4,7 +4,7 @@ import { fetchOrders, getOrderById, updateOrderById } from "./ordersThunks";
 // Async thunk to fetch users
 const initialState = {
   ordersData: {},
-  ordersloading: false,
+  ordersLoading: false,
   updateOrderByIdLoading: false,
 
   orderData: {},
@@ -23,16 +23,16 @@ const ordersSlice = createSlice({
     builder
       //get-user
       .addCase(fetchOrders.pending, (state) => {
-        state.ordersloading = true;
+        state.ordersLoading = true;
         state.error = null;
         state.ordersData = null;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.ordersData = action.payload;
-        state.ordersloading = false;
+        state.ordersLoading = false;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
-        state.ordersloading = false;
+        state.ordersLoading = false;
         state.error = action.payload || "Failed to fetch users";
       })
 

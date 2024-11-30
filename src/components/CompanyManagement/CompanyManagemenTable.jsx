@@ -50,15 +50,17 @@ const BASE_URL = import.meta.env.VITE_APP_BASE_LIVE_URL;
 //   // Add more data as needed
 // ];
 
-const CompanyTable = () => {
+const CompanyTable = ({ selectedItems, setSelectedItems }) => {
   const [isOpen, setIsOpen] = useState(null);
   const [data, setData] = useState("");
+  const [checkedForAll, setCheckedForAll] = useState(false);
+  const [checkedItems, setCheckedItems] = useState({});
   const [Index, setIndex] = useState();
 
   const dispatch = useDispatch();
 
   const { profileData } = useSelector((state) => state.profile);
-  const { ordersData, ordersloading, updateOrderByIdLoading } = useSelector(
+  const { ordersData, ordersLoading, updateOrderByIdLoading } = useSelector(
     (state) => state.orders
   );
   const { usersData } = useSelector((state) => state.users);
@@ -86,6 +88,27 @@ const CompanyTable = () => {
     setModalOpen(false);
   };
 
+  const handleSelectAll = (e) => {
+    const isChecked = e.target.checked;
+    setCheckedForAll(isChecked);
+    if (isChecked) {
+      setSelectedItems(ordersData.data.map((item) => ({ id: item.id, item })));
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const handleCheckboxChange = (item) => (e) => {
+    const isChecked = e.target.checked;
+    setSelectedItems((prevSelectedItems) => {
+      if (isChecked) {
+        return [...prevSelectedItems, { id: item.id, item }];
+      } else {
+        return prevSelectedItems.filter((selected) => selected.id !== item.id);
+      }
+    });
+  };
+
   return (
     <div className="bg-white min-h-96">
       {/* Table Section */}
@@ -94,6 +117,13 @@ const CompanyTable = () => {
           <table className="min-w-full leading-normal">
             <thead>
               <tr>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
+                  <input
+                    type="checkbox"
+                    checked={checkedForAll}
+                    onChange={handleSelectAll}
+                  />
+                </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
                   ID
                 </th>
@@ -134,6 +164,17 @@ const CompanyTable = () => {
               {!!ordersData?.data?.length &&
                 ordersData?.data.map((item, index) => (
                   <tr key={index}>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
+                      <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
+                        <input
+                          type="checkbox"
+                          checked={selectedItems.some(
+                            (selected) => selected.id === item.id
+                          )}
+                          onChange={handleCheckboxChange(item)}
+                        />
+                      </p>
+                    </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       <p className="text-customBlack opacity-85 font-semibold whitespace-no-wrap">
                         {index + 1}
@@ -184,7 +225,9 @@ const CompanyTable = () => {
                           <option value={"unassigned"}>Unassinged</option>
                           {usersData?.data?.map((el, ind) => {
                             return (
-                              <option key={ind} value={el.id}>{el.legal_name}</option>
+                              <option key={ind} value={el.id}>
+                                {el.legal_name}
+                              </option>
                             );
                           })}
                         </select>
@@ -348,7 +391,7 @@ const CompanyTable = () => {
             </tbody>
           </table>
 
-          {ordersloading && (
+          {ordersLoading && (
             <div className="w-full h-full flex items-center justify-center my-32">
               <CircularLoader />
             </div>
