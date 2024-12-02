@@ -124,9 +124,9 @@ const OrderInvoice = ({ data, orderloading = "false" }) => {
     //     <p className="text-sm">Thank you for your business!</p>
     //   </div>
     // </div>
-    <div className="max-w-4xl mx-auto py-2 px-8 border rounded-lg shadow-md my-10  scroll-auto">
+    <div className="max-w-4xl mx-auto py-1 px-8 border rounded-lg shadow-md  scroll-auto">
       {/* Header Section */}
-      <div className="flex justify-between items-center border-b pb-4 mb-2">
+      <div className="flex justify-between items-center border-b pb-4 ">
         <div>
           <h1 className="text-2xl font-bold">INVOICE</h1>
           <p>USA Gomobile</p>
@@ -231,18 +231,18 @@ const OrderInvoice = ({ data, orderloading = "false" }) => {
         <h2 className="text-lg font-semibold">Total: $590.00</h2>
       </div>
       {/* Note to Customer */}
-      <div className=" pt-2 ">
+      <div className="pt-2 ">
         <h2 className="font-semibold text-lg">Note to Customer</h2>
         <p>51575793</p>
         <p>51557566</p>
       </div>
 
       {/* Pay Button */}
-      <div className="text-center mt-2">
+      {/* <div className="text-center mt-2">
         <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
           Pay Invoice
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

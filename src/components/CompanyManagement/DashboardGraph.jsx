@@ -40,8 +40,8 @@ const DashboardGraph = () => {
   const lineChartOptions = {
     responsive: true,
     plugins: {
-      legend: { display: true, position: "top" },
-      title: { display: true, text: "User Growth Over Months" },
+      legend: { display: true, position: "bottom" },
+      // title: { display: true, text: "" },
     },
   };
 
@@ -96,7 +96,7 @@ const DashboardGraph = () => {
       {/* Chart Section */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-4">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
-          Dashboard Insights
+        User Growth Over Months
         </h2>
         <Line data={lineChartData} options={lineChartOptions} />
       </div>

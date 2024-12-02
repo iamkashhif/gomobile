@@ -22,6 +22,7 @@ import Sidebar from "./components/shared/Sidebar";
 import PasswordVerify from "./components/Auth/PasswordVirefy";
 import OtpCheck from "./components/Auth/OtpCheck";
 import EditFranchise from "./pages/franchiseManagement/EditFranchise";
+import SupplierManagementHome from "./pages/supplierManagement/SupplierManagementHome";
 
 const App = () => {
   return (
@@ -89,6 +90,12 @@ const MainContent = () => {
       path: "/admin/franchise-management/edit-franchise/:id",
       rPath: "franchise-management/edit-franchise/:id",
       rElement: <EditFranchise />,
+    },
+    {
+      label: "Supplier Management",
+      path: "/admin/supplier-management",
+      rPath: "supplier-management",
+      rElement: <SupplierManagementHome />,
     },
   ]);
 

@@ -38,7 +38,7 @@ const FranchiseManagementHome = () => {
   useEffect(() => {
     if (!search) dispatch(fetchUsers({ search: "", page, perPage }));
   }, [page, perPage]);
-;
+
 
   return (
     <div className="bg-customGrey">
