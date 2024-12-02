@@ -1,121 +1,40 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
-import CompanyTable from "../../components/CompanyManagement/CompanyManagemenTable";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchOrders } from "../../rtk/orders/ordersThunks";
-import Pagination from "../../components/tables/Pagination";
-import { debounce } from "lodash";
-import { toast } from "react-toastify";
-import OrderInvoicePopup from "../../components/CompanyManagement/OrderInvoicePopup";
+import React, { useEffect, useRef, useState } from "react";
 import SupplierManagementTable from "../../components/SupplierManagement/SupplierManagementTable";
-
-const data = [
-  {
-    id: 12345,
-    name: "GoMobile Tires North Florida",
-    category: "Category 1",
-    description: "GoMobile Tires North Florida",
-    status: "Active",
-  },
-  {
-    id: 12346,
-    name: "GoMobile Tires OR-PDX",
-    category: "Category 1",
-    description: "GoMobile Tires OR-PDX",
-    status: "Active",
-  },
-  {
-    id: 12347,
-    name: "GoMobile Tires MO-Kansas City",
-    category: "Category 1",
-    description: "GoMobile Tires MO-Kansas City",
-    status: "Active",
-  },
-  {
-    id: 12348,
-    name: "GoMobile Tires TX-Austin",
-    category: "Category 1",
-    description: "GoMobile Tires TX-Austin",
-    status: "Inactive",
-  },
-  // Add more data as needed
-];
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSuppliers } from "../../rtk/supplier/supplierThunks";
+import { debounce } from "lodash";
+import { FaSearch } from "react-icons/fa";
+import Pagination from "../../components/tables/Pagination";
 
 const SupplierManagementHome = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchCriteria, setSearchCriteria] = useState({
-    search: "",
-    searchByDate: "",
-    searchByFranchiseOrUser: "",
-    searchByStatus: "",
-  });
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  const { ordersData } = useSelector((state) => state.orders);
-  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
   const perPage = 10;
-
   const handlePageChange = (page) => {
     setPage(page);
   };
-
-  const toggleDropdown1 = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const [isOpen, setIsOpen] = useState(null); // Track which dropdown is open
-
-  const toggleDropdown = (id) => {
-    setIsOpen(isOpen === id ? null : id); // Toggle dropdown for a specific row
-  };
+  const { supplierData, supplierLoading } = useSelector(
+    (state) => state.suppliers
+  );
 
   const debounceDispatch = useRef(
-    debounce((criteria) => {
-      dispatch(fetchOrders({ ...criteria, page, perPage }));
+    debounce((value) => {
+      dispatch(fetchSuppliers({ search: value, page, perPage }));
     }, 500)
   );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSearchCriteria((prev) => {
-      const updatedCriteria = { ...prev, [name]: value };
-      debounceDispatch.current(updatedCriteria);
-      return updatedCriteria;
-    });
+    debounceDispatch.current(value);
+    setSearch(value);
   };
 
-    useEffect(() => {
-      // Initial fetch with default criteria
-      dispatch(fetchOrders({ ...searchCriteria, page, perPage }));
-    }, [dispatch, page, perPage]);
-
-  // handle Generate Invoice
-  const checkIfAllSameAssignedFranchiseId = selectedItems.every(
-    (order) =>
-      order.item.assignedFranchiseId ===
-      selectedItems[0].item.assignedFranchiseId
-  );
-  const handleGenerateInvoice = () => {
-    if (checkIfAllSameAssignedFranchiseId) {
-      handleOpenModal();
-    } else {
-      toast.error(
-        "The assigned user should be the same to generate the invoice.",
-        {
-          position: "top-center",
-        }
-      );
-    }
-  };
+  useEffect(() => {
+    // Initial fetch with default criteria
+    dispatch(fetchSuppliers({ search, page, perPage }));
+  }, [dispatch, page, perPage]);
 
   return (
     <div className="bg-customGrey">
@@ -140,6 +59,15 @@ const SupplierManagementHome = () => {
               Supplier Management
             </p>
           </div>
+          <div className="">
+            <Link
+              to="/admin/supplier-management/add-supplier"
+              className="px-2 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
+            >
+              + Add&nbsp;
+              <span className="lg:inline-block hidden">Supplier</span>
+            </Link>
+          </div>
         </div>
         {/* filters */}
         <div className="mt-5 mb-4 px-5 w-full">
@@ -153,26 +81,23 @@ const SupplierManagementHome = () => {
                 placeholder="Type to search"
                 name="search"
                 className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
-                value={searchCriteria.search}
+                value={search}
                 onChange={handleChange}
               />
             </div>           
           </div>
         </div>
 
-        <SupplierManagementTable
-       
-        />
+        <SupplierManagementTable supplierData={supplierData} supplierLoading={supplierLoading} />
 
-        {!!ordersData?.data?.length && (
+        {!!supplierData?.data?.length && (
           <Pagination
             currentPage={page}
-            totalPages={ordersData?.totalPages}
+            totalPages={supplierData?.totalPages}
             onPageChange={handlePageChange}
           />
         )}
       </div>
-     
     </div>
   );
 };

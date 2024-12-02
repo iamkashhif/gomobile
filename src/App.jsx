@@ -23,6 +23,7 @@ import PasswordVerify from "./components/Auth/PasswordVirefy";
 import OtpCheck from "./components/Auth/OtpCheck";
 import EditFranchise from "./pages/franchiseManagement/EditFranchise";
 import SupplierManagementHome from "./pages/supplierManagement/SupplierManagementHome";
+import AddNewSupplier from "./pages/supplierManagement/AddNewSupplier";
 
 const App = () => {
   return (
@@ -91,11 +92,24 @@ const MainContent = () => {
       rPath: "franchise-management/edit-franchise/:id",
       rElement: <EditFranchise />,
     },
+    // Supplier Routes
     {
       label: "Supplier Management",
       path: "/admin/supplier-management",
       rPath: "supplier-management",
       rElement: <SupplierManagementHome />,
+    },
+    {
+      label: "Supplier Management",
+      path: "/admin/supplier-management/add-supplier",
+      rPath: "supplier-management/add-supplier",
+      rElement: <AddNewSupplier />,
+    },
+    {
+      label: "Supplier Management",
+      path: "/admin/supplier-management/edit-supplier/:id",
+      rPath: "supplier-management/edit-supplier/:id",
+      rElement: <AddNewSupplier />,
     },
   ]);
 
