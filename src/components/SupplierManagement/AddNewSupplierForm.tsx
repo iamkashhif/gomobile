@@ -1,6 +1,7 @@
 import React from "react";
 
 const AddNewSupplierForm = ({ formData, setFormData }) => {
+  console.log({formData})
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({

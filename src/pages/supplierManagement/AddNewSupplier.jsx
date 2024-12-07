@@ -43,12 +43,14 @@ const AddNewSupplier = () => {
   useEffect(() => {
     if (id && supplierById) {
       setFormData((prevState) => {
-        const newFormData = { ...prevState };
-        delete newFormData.id;
+        const {authToken: id, ...rest } = supplierById
+        const newFormData = { ...rest,id };
+        // delete newFormData.id;
         return newFormData;
       });
     }
   }, [id, supplierById]);
+  console.log({supplierById})
 
   // Get the current form component based on the current step
   const CurrentForm = steps[currentStep].component;

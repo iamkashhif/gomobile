@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {fetchSuppliers, getSupplierById } from "./supplierThunks";
+import {
+  fetchSuppliers,
+  getSupplierById,
+  deleteSuppliers,
+} from "./supplierThunks";
 
 // Async thunk to fetch users
 const initialState = {
   supplierData: {},
   supplierLoading: false,
   supplierById: {},
-
 };
 
 const supplierSlice = createSlice({
@@ -42,6 +45,18 @@ const supplierSlice = createSlice({
         state.supplierLoading = false;
         state.error = action.payload || "Failed to fetch users";
       })
+      .addCase(deleteSuppliers.pending, (state) => {
+        state.supplierLoading = true;
+        state.error = null;
+        state.supplierData = null;
+      })
+      .addCase(deleteSuppliers.fulfilled, (state) => {
+        state.supplierLoading = false;
+      })
+      .addCase(deleteSuppliers.rejected, (state, action) => {
+        state.supplierLoading = false;
+        state.error = action.payload || "Failed to delete supplier";
+      });
   },
 });
 

@@ -30,6 +30,7 @@ apiClient.interceptors.request.use(
 const get = (url, config = {}) => apiClient.get(url, config);
 const _delete = (url, config = {}) => apiClient.delete(url, config);
 const put = (url, data = {}, config = {}) => apiClient.put(url, data, config);
+const patch = (url, data = {}, config = {}) => apiClient.patch(url, data, config);
 const post = (url, data = {}, config = {}) => apiClient.post(url, data, config);
 
-export { get, _delete, put, post };
+export { get, _delete, put, post, patch };

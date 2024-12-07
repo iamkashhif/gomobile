@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { get, post, put, _delete } from "../../../utils/ApiServices";
+import { get, post, put, _delete, patch } from "../../../utils/ApiServices";
 
 export const fetchSuppliers = createAsyncThunk(
   "supplier/fetchSuppliers",
   async ({ search = "", page = 1, perPage = 10 }, thunkAPI) => {
+    console.log("triggered 33333")
     try {
       const response = await get(
         `/supplier?search=${search}&pageNo=${page}&perPage=${perPage}`
@@ -12,8 +13,9 @@ export const fetchSuppliers = createAsyncThunk(
       console.log({response})
       if (
         response.data &&
-        response.data.results &&
-        response.data.results.data
+        response.data.results 
+        // &&
+        // response.data.results
       ) {
         return response.data.results;
       } else {
@@ -50,7 +52,7 @@ export const updateSuppliers = createAsyncThunk(
   "supplier/updateSuppliers",
   async ({id, payload, dispatch, navigate}, thunkAPI) => {
     try {
-      const response = await put(
+      const response = await patch(
         `/supplier/${id}`, {
           ...payload
         }
@@ -69,15 +71,16 @@ export const updateSuppliers = createAsyncThunk(
 // delete 
 export const deleteSuppliers = createAsyncThunk(
   "supplier/deleteSuppliers",
-  async ({id, dispatch, navigate}, thunkAPI) => {
+  async ({id, dispatch}, thunkAPI) => {
     try {
-      const response = await _delete(
+      await _delete(
         `/supplier/${id}`
       );
-      toast.success("Deleted");
-      console.log({response})
-      dispatch(fetchSuppliers());
-      navigate("/admin/supplier-management");
+      toast.success("supplier Deleted successfully");
+      
+      dispatch(fetchSuppliers({search: ""}));
+
+      // return {}
     } catch (error) {
       console.error("Error fetching orders:", error);
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
@@ -86,7 +89,7 @@ export const deleteSuppliers = createAsyncThunk(
 );
 
 export const getSupplierById = createAsyncThunk(
-  "supplier/deleteSuppliers",
+  "supplier/getSupplierById",
   async ({id}, thunkAPI) => {
     try {
       const response = await get(
@@ -96,9 +99,9 @@ export const getSupplierById = createAsyncThunk(
       if (
         response.data &&
         response.data.results &&
-        response.data.results.data.dataValues
+        response.data.results.data
       ) {
-        return response.data.results.data.dataValues;
+        return response.data.results.data;
       } else {
         throw new Error("Invalid response structure");
       }

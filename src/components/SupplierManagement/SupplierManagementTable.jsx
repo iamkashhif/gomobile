@@ -118,7 +118,7 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
                               deleteSuppliers({
                                 id: item.id,
                                 dispatch,
-                                navigate,
+                                // navigate,dd
                               })
                             );
                           }}

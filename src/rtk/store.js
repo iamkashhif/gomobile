@@ -11,4 +11,8 @@ export const store = configureStore({
     suppliers: supplierReducer,
     profile: profileInfoReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
