@@ -201,7 +201,20 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                         {item.orderTotal}
                       </p>
                     </td>
-                    {profileData?.role === "Admin" && (
+                  
+  <td className="px-5 py-3 border-b border-gray-200 bg-white text-xs">
+    {item?.franchise_code} - {item?.legal_name}
+    {/* {(() => {
+      const assignedFranchise = usersData?.data?.find(
+        (user) => user.id === item.assignedFranchiseId
+      );
+      return assignedFranchise
+        ? `${assignedFranchise.id} - ${assignedFranchise.legal_name}`
+        : "Unassigned";
+    })()} */}
+  </td>
+
+                    {/* {profileData?.role === "Admin" && (
                       <td className="px-5 py-3 border-b border-gray-200 bg-white text-xs">
                         <select
                           value={item.assignedFranchiseId}
@@ -220,6 +233,7 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                             }
                           }}
                           name="asiggned"
+                          // disabled={profileData.role === "Accountant"}
                           className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-gray-300 sm:text-xs"
                         >
                           <option value={"unassigned"}>Unassinged</option>
@@ -232,7 +246,7 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                           })}
                         </select>
                       </td>
-                    )}
+                    )} */}
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
                       {item?.shippingLabel?.filePath ? (
                         <a

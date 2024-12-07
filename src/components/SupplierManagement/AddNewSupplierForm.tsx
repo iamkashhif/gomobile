@@ -124,6 +124,20 @@ const AddNewSupplierForm = ({ formData, setFormData }) => {
             placeholder="Type here"
           />
         </div>
+        <div>
+          <label className="block text-sm font-bold text-customTextGrey1">
+            Status
+          </label>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleInputChange}
+            className="mt-1 block md:w-80 w-full text-sm rounded-md focus:outline-none border-customTextGrey1 shadow-sm sm:text-xs"
+          >
+            <option value={true}>Active</option>
+            <option value={false}>Inactive</option>
+          </select>
+        </div>
       </div>
     </div>
   );

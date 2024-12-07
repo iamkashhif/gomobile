@@ -159,6 +159,7 @@ const FirstSetForm = ({ formData, setFormData, id = "" }) => {
           >
             <option value="User">User</option>
             <option value="Admin">Admin</option>
+            <option value="Accountant">Accountant</option>
           </select>
         </div>
         <div>

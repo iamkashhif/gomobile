@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 // import { openModal } from "../Modal/Modal";
 import CircularLoader from "../tables/Loader";
 import { deleteSuppliers } from "../../rtk/supplier/supplierThunks";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { BiCopy } from "react-icons/bi";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import { AiOutlineCheck } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (id) => {
+    navigator.clipboard.writeText(id);
+    setCopied(true);
+    toast.success("Token Copied successfully!");
+    setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+  };
+
   return (
     <div className="bg-white min-h-96">
       {/* Table Section */}
@@ -47,6 +61,12 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
                   ZipCode
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
+                  Token
+                </th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
+                  Status
                 </th>
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
                   Action
@@ -105,14 +125,39 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
                         {item.zipcode}
                       </p>
                     </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs relative text-center">
+                      {copied ? (
+                        <AiOutlineCheck
+                          size={24}
+                          className="text-green-500 animate-pulse"
+                          title="Copied!"
+                        />
+                      ) : (
+                        <BiCopy
+                          size={24}
+                          className="text-gray-500 cursor-pointer hover:text-black"
+                          onClick={() => (item.id ? handleCopy(item.id) : null)}
+                          title="Copy to clipboard"
+                        />
+                      )}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
+                    <p
+                      className={` ${
+                        item.status ? "text-[#39A9DB]" : "text-red-500"
+                      } opacity-85 font-semibold whitespace-no-wrap`}
+                    >
+                      {item.status ? "Active" : "Inactive"}
+                    </p>
+                  </td>
                     <td className="px-5  py-5 border-b border-gray-200 bg-white text-xs relative">
                       <div className="flex gap-2 items-center justify-center">
                         <Link
                           to={`/admin/supplier-management/edit-supplier/${item.id}`}
                         >
-                          <FaEdit className="text-customGrey3 text-lg hover:scale-110" />
+                          <FaEdit className="text-customGrey3 text-lg hover:scale-110" title="Update Supplier"/>
                         </Link>
-                        <MdOutlineDeleteForever
+                        {/* <MdOutlineDeleteForever
                           onClick={() => {
                             dispatch(
                               deleteSuppliers({
@@ -124,7 +169,7 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
                           }}
                           size={24}
                           className="text-customRed cursor-pointer text-lg hover:scale-110"
-                        />
+                        /> */}
                       </div>
                     </td>
                   </tr>
