@@ -61,7 +61,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <DashboardGraph />
+      <DashboardGraph role={profileData.role} />
     </div>
   );
 };

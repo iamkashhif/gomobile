@@ -4,10 +4,10 @@ import { get, post, put } from "../../../utils/ApiServices";
 
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
-  async ({ search = "", searchByDate = "", searchByFranchiseOrUser = "", searchByStatus = "", page = 1, perPage = 10 }, thunkAPI) => {
+  async ({ search = "", orderDate = "", franchise = "", status = "", page = 1, perPage = 10 }, thunkAPI) => {
     try {
       const response = await get(
-        `/order/orders?search=${search}&searchByDate=${searchByDate}&searchByFranchiseOrUser=${searchByFranchiseOrUser}&searchByStatus=${searchByStatus}&pageNo=${page}&perPage=${perPage}`
+        `/order/orders?search=${search}&orderDate=${orderDate}&franchise=${franchise}&status=${status}&pageNo=${page}&perPage=${perPage}`
       );
       if (
         response.data &&

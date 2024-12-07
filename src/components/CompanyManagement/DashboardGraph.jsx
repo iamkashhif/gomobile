@@ -11,6 +11,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useSelector } from "react-redux";
+import CircularLoader from "../tables/Loader";
 
 ChartJS.register(
   CategoryScale,
@@ -23,13 +25,24 @@ ChartJS.register(
   Legend
 );
 
-const DashboardGraph = () => {
+const DashboardGraph = ({ role }) => {
+  const { DashboardData, DashboardLoading } = useSelector(
+    (state) => state.users
+  );
+  console.log(DashboardData);
+  const lineLabels = DashboardData?.ordersCountPerMonth?.map((item) =>
+    item.month.substring(5)
+  ); // Extracting just the month (e.g., "10" for October)
+  const data = DashboardData?.ordersCountPerMonth?.map(
+    (item) => item.orderCount
+  );
+  console.log({ lineLabels, data });
   const lineChartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    labels: lineLabels,
     datasets: [
       {
-        label: "User Growth",
-        data: [100, 200, 300, 400, 500, 700, 1023],
+        label: "Order Count",
+        data: data,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         tension: 0.4,
@@ -41,41 +54,46 @@ const DashboardGraph = () => {
     responsive: true,
     plugins: {
       legend: { display: true, position: "bottom" },
-      // title: { display: true, text: "" },
     },
   };
+  // Extract all unique months from the dataset
+  const months = [
+    ...new Set(
+      DashboardData?.franchisesOrderCount?.flatMap((item) =>
+        item.results.map((result) => result.month)
+      )
+    ),
+  ];
+
+  // Get the labels (franchise names)
+  const labels = DashboardData?.franchisesOrderCount?.map((item) => item.name);
+  const datasets = months.map((month) => ({
+    label: month,
+    data: labels.map((label) => {
+      const franchise = DashboardData?.franchisesOrderCount?.find(
+        (item) => item.name === label
+      );
+      const orderForMonth = franchise.results.find(
+        (result) => result.month === month
+      );
+
+      return orderForMonth ? orderForMonth.orderCount : 0; 
+    }),
+    backgroundColor: labels.map((label) => {
+      const franchise = DashboardData?.franchisesOrderCount?.find(
+        (item) => item.name === label
+      );
+      const orderForMonth = franchise.results.find(
+        (result) => result.month === month
+      );
+
+      return orderForMonth ? orderForMonth.color : undefined; 
+    }),
+  }));
 
   const barChartData = {
-    labels: [
-      "AZ-PHX",
-      "CA-OC",
-      "CO-SPR",
-      "FL-BROWARD",
-      "FL-JAX",
-      "IL-CHI",
-      "MO-KC",
-      "NC-CLT",
-      "NY-NYC",
-      "OR-PDX",
-      "TX-DFW",
-    ], // Locations
-    datasets: [
-      {
-        label: "July",
-        data: [0, 0, 0, 0, 10, 15, 0, 5, 0, 0, 5], // Replace with your July data
-        backgroundColor: "#0070C0", // Blue matching the image
-      },
-      {
-        label: "August",
-        data: [0, 0, 1, 0, 20, 25, 5, 15, 30, 5, 10], // Replace with your August data
-        backgroundColor: "#FF0000", // Red matching the image
-      },
-      {
-        label: "September",
-        data: [0, 0, 0, 5, 50, 30, 10, 20, 45, 25, 20], // Replace with your September data
-        backgroundColor: "#FFC000", // Yellow matching the image
-      },
-    ],
+    labels,
+    datasets,
   };
 
   const barChartOptions = {
@@ -96,16 +114,26 @@ const DashboardGraph = () => {
       {/* Chart Section */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-4">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
-        User Growth Over Months
+          User Growth Over Months
         </h2>
-        <Line data={lineChartData} options={lineChartOptions} />
+        {DashboardLoading ? (
+          <CircularLoader size="w-8 h-8" />
+        ) : (
+          <Line data={lineChartData} options={lineChartOptions} />
+        )}
       </div>
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">
-        Orders Received
-        </h2>
-        <Bar data={barChartData} options={barChartOptions} />
-      </div>
+      {role === "Admin" && (
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">
+            Orders Received
+          </h2>
+          {DashboardLoading ? (
+            <CircularLoader size="w-8 h-8" />
+          ) : (
+            <Bar data={barChartData} options={barChartOptions} />
+          )}
+        </div>
+      )}
     </div>
   );
 };

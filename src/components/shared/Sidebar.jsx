@@ -69,7 +69,7 @@ const Sidebar = () => {
         </svg>
       ),
     },
-    {
+    profileData.role === "Admin" &&  {
       label: "Supplier Management",
       path: "/admin/supplier-management",
       icon: (
@@ -88,7 +88,7 @@ const Sidebar = () => {
         </svg>
       ),
     },
-  ].filter(Boolean);
+  ].filter(item => item);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);

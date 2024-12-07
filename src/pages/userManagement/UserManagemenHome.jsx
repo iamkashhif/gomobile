@@ -46,9 +46,9 @@ const CompanyManagementHome = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState({
     search: "",
-    searchByDate: "",
-    searchByFranchiseOrUser: "",
-    searchByStatus: "",
+    orderDate: "",
+    franchise: "",
+    status: "",
   });
   const [selectedItems, setSelectedItems] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -61,6 +61,8 @@ const CompanyManagementHome = () => {
   };
 
   const { ordersData } = useSelector((state) => state.orders);
+  const { usersData } = useSelector((state) => state.users);
+  const { profileData } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const perPage = 10;
@@ -172,39 +174,48 @@ const CompanyManagementHome = () => {
             </div>
 
             <div className="relative">
-              <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
-                <FaSearch className="text-customGrey3 text-xs" />
-              </span>
-              <input
-                type="text"
-                placeholder="Search for a user or franchise"
-                className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
-                name="searchByFranchiseOrUser"
-                value={searchCriteria.searchByFranchiseOrUser}
-                onChange={handleChange}
-              />
+              {profileData?.role === "Admin" && (
+                <select
+                  value={searchCriteria.franchise}
+                  onChange={handleChange}
+                  name="franchise"
+                  className="block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none border border-gray-300 sm:text-xs"
+                >
+                  <option value={""}>All Users Or Franchises</option>
+                  {usersData?.data?.map((el, ind) => {
+                    return (
+                      <option key={ind} value={el.id}>
+                        {el.legal_name}
+                      </option>
+                    );
+                  })}
+                </select>
+              )}
             </div>
 
             <div className="relative">
-              <span className="absolute inset-y-0 left-1 flex items-center text-customGrey4">
-                <FaSearch className="text-customGrey3 text-xs" />
-              </span>
-              <input
-                type="text"
-                placeholder="Search for a status"
-                className="border-b-2 text-xs focus:outline-none font-semibold pl-6 pb-2 w-full"
-                name="searchByStatus"
-                value={searchCriteria.searchByStatus}
+              <select
+                name="status"
+                value={searchCriteria.status}
                 onChange={handleChange}
-              />
+                className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs border border-gray-300`}
+              >
+                <option value="">Search By Status</option>
+                <option value="OnHold">OnHold</option>
+                <option value="Ordered" disabled>
+                  Ordered
+                </option>
+                <option value="Shipped">Shipped</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
             </div>
 
             <div className="relative">
               <input
                 type="date"
                 className="border-b-2 text-xs focus:outline-none font-semibold pb-2 pl-1 w-full text-gray-500"
-                name="searchByDate"
-                value={searchCriteria.searchByDate}
+                name="orderDate"
+                value={searchCriteria.orderDate}
                 onChange={handleChange}
               />
             </div>
