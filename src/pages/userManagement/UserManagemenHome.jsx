@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaSearch, FaChevronDown, FaCalendarAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import AddNewCompany from "./AddNewCompany";
+import { FaSearch } from "react-icons/fa";
 import CompanyTable from "../../components/CompanyManagement/CompanyManagemenTable";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchOrders } from "../../rtk/orders/ordersThunks";
+import { fetchOrders, getOrderById } from "../../rtk/orders/ordersThunks";
 import Pagination from "../../components/tables/Pagination";
 import { debounce } from "lodash";
 import { toast } from "react-toastify";
@@ -109,6 +107,8 @@ const CompanyManagementHome = () => {
   );
   const handleGenerateInvoice = () => {
     if (checkIfAllSameAssignedFranchiseId) {
+      // console.log({ selectedItems[0].item.assignedFranchiseId})
+      dispatch(getOrderById({orderId: selectedItems[0].id}))
       handleOpenModal();
     } else {
       toast.error(
