@@ -134,8 +134,8 @@ const AddNewSupplierForm = ({ formData, setFormData }) => {
             onChange={handleInputChange}
             className="mt-1 block md:w-80 w-full text-sm rounded-md focus:outline-none border-customTextGrey1 shadow-sm sm:text-xs"
           >
-            <option value={true}>Active</option>
-            <option value={false}>Inactive</option>
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
           </select>
         </div>
       </div>

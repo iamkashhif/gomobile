@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { get, post, put } from "../../../utils/ApiServices";
+import { get, patch, post, put } from "../../../utils/ApiServices";
 
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
@@ -30,7 +30,7 @@ export const getOrderById = createAsyncThunk(
   async ({ orderId }, thunkAPI) => {
     try {
       const response = await get(`/order/${orderId}`);
-      console.log({ rrrrrrrrr: response });
+      // console.log({ rrrrrrrrr: response });
       if (response.data && response.data.orderInfo) {
         return response.data.orderInfo;
       } else {
@@ -38,6 +38,25 @@ export const getOrderById = createAsyncThunk(
       }
     } catch (error) {
       console.error("Error fetching users:", error);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+export const updateOrderForProductItem = createAsyncThunk(
+  "orders/updateOrderForProductItem",
+  async ({ payload,  orderId, itemId }, thunkAPI) => {
+    try {
+      const response = await patch(`/product-item/${itemId}`, payload );
+      if (response.data && response.data.results) {
+        toast.success("Updated");
+
+        thunkAPI.dispatch(getOrderById({orderId}))
+      } else {
+        throw new Error("Invalid response structure");
+      }
+     
+    } catch (error) {
+      console.error("Error Updating items:", error);
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }

@@ -66,8 +66,9 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
   const { usersData } = useSelector((state) => state.users);
 
   useEffect(() => {
+    if(profileData.role === "Admin" || profileData.role === "Accountant")
     dispatch(fetchUsers({ search: "", page: 1, perPage: 1000 }));
-  }, []);
+  }, [profileData, dispatch]);
 
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -143,11 +144,11 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
                   Order&nbsp;total
                 </th>
-                {profileData?.role === "Admin" && (
+               
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
-                    Assigned To
+                    Franchise
                   </th>
-                )}
+                
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-bold text-gray-600 tracking-wider">
                   Shipping Label
                 </th>
@@ -203,7 +204,7 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                     </td>
                   
   <td className="px-5 py-3 border-b border-gray-200 bg-white text-xs">
-    {item?.franchise_code} - {item?.legal_name}
+    {item?.franchise?.franchise_code} - {item?.franchise?.legal_name}
     {/* {(() => {
       const assignedFranchise = usersData?.data?.find(
         (user) => user.id === item.assignedFranchiseId
@@ -259,7 +260,12 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                         </a>
                       ) : (
                         <p
+                      
                           onClick={() => {
+                          if( profileData.role === "Accountant") {
+                            return
+                          }else {
+
                             if (!item.requestedShippingLabel) {
                               setIndex(index);
                               dispatch(
@@ -274,7 +280,9 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                                 })
                               );
                             }
+                          }
                           }}
+                          disabled={ profileData.role === "Accountant"}
                           className={`inline-flex items-center gap-2 font-semibold whitespace-nowrap px-3 py-2 text-center text-black rounded-md mx-auto cursor-pointer hover:scale-105 ${
                             item.requestedShippingLabel ? "opacity-70" : ""
                           }`}
@@ -315,6 +323,7 @@ const CompanyTable = ({ selectedItems, setSelectedItems }) => {
                             );
                           }
                         }}
+                        disabled={profileData.role ==="Accountant"}
                         className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs border border-gray-300`}
                         // ${
                         //   item.status === "Shipped"

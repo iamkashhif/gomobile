@@ -80,6 +80,7 @@ import CircularLoader from "../tables/Loader";
 const FranchiseTable = () => {
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { usersData, userloading } = useSelector((state) => state.users);
+  const { profileData } = useSelector((state) => state.profile);
   const [isOpen, setIsOpen] = useState(null); // Track which dropdown is open
 
   const toggleDropdown = (id) => {
@@ -135,9 +136,9 @@ const FranchiseTable = () => {
                 <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
                   Status
                 </th>
-                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
+                { profileData.role !== "Accountant" && <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs  font-bold text-gray-600 tracking-wider">
                   Action
-                </th>
+                </th>}
               </tr>
             </thead>
             <tbody>
@@ -363,13 +364,13 @@ const FranchiseTable = () => {
                       </div>
                     )}
                   </td> */}
-                  <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs relative">
+                  { profileData.role !== "Accountant" && <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs relative">
                     <Link
                       to={`/admin/franchise-management/edit-franchise/${item.id}`}
                     >
                       <FaEdit className="text-customGrey3 text-lg hover:scale-110" />
                     </Link>
-                  </td>
+                  </td>}
                 </tr>
               ))}
             </tbody>

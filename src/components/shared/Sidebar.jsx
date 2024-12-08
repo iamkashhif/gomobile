@@ -31,7 +31,7 @@ const Sidebar = () => {
 
   const menu = [
     { label: "Dashboard", path: "/admin", icon: <MdDashboard /> },
-    profileData.role === "Admin" && {
+      (profileData.role === "Admin" || profileData.role === "Accountant") && {
       label: "User  ",
       path: "/admin/franchise-management",
       icon: (
@@ -69,7 +69,7 @@ const Sidebar = () => {
         </svg>
       ),
     },
-    profileData.role === "Admin" &&  {
+      (profileData.role === "Admin" || profileData.role === "Accountant") &&  {
       label: "Supplier Management",
       path: "/admin/supplier-management",
       icon: (

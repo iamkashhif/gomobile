@@ -11,6 +11,7 @@ const SupplierManagementHome = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
+  const { profileData } = useSelector((state) => state.profile);
   const perPage = 10;
   const handlePageChange = (page) => {
     setPage(page);
@@ -60,13 +61,13 @@ const SupplierManagementHome = () => {
             </p>
           </div>
           <div className="">
-            <Link
+          { profileData.role !== "Accountant" && <Link
               to="/admin/supplier-management/add-supplier"
               className="px-2 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
             >
               + Add&nbsp;
               <span className="lg:inline-block hidden">Supplier</span>
-            </Link>
+            </Link>}
           </div>
         </div>
         {/* filters */}

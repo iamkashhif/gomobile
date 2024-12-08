@@ -173,7 +173,7 @@ const CompanyManagementHome = () => {
               />
             </div>
 
-            <div className="relative">
+          { profileData.role === "Admin" || profileData.role === "Accountant" && <div className="relative">
               {profileData?.role === "Admin" && (
                 <select
                   value={searchCriteria.franchise}
@@ -191,7 +191,7 @@ const CompanyManagementHome = () => {
                   })}
                 </select>
               )}
-            </div>
+            </div>}
 
             <div className="relative">
               <select

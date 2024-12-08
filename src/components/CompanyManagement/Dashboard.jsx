@@ -13,7 +13,7 @@ const Dashboard = () => {
   const { profileData } = useSelector((state) => state.profile);
 
   const cards = [
-    profileData.role === "Admin" && {
+    (profileData.role === "Admin" || profileData.role === "Accountant")  && {
       id: 1,
       value: DashboardData?.userCount || "0",
       title: "Total Users",

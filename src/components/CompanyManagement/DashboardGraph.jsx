@@ -122,7 +122,7 @@ const DashboardGraph = ({ role }) => {
           <Line data={lineChartData} options={lineChartOptions} />
         )}
       </div>
-      {role === "Admin" && (
+      { (role === "Admin" || role === "Accountant") && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">
             Orders Received

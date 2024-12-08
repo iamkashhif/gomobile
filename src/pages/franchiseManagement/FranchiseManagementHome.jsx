@@ -10,6 +10,7 @@ import Pagination from "../../components/tables/Pagination";
 const FranchiseManagementHome = () => {
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // const [isOpen, setIsOpen] = useState(null);
+  const { profileData } = useSelector((state) => state.profile);
   const { usersData } = useSelector((state) => state.users);
 
   const [search, setSearch] = useState("");
@@ -46,12 +47,12 @@ const FranchiseManagementHome = () => {
         <div className="flex flex-row mb-4 px-6 pt-6 sm:mb-0 justify-between w-full">
           <FranchiseManagementHeader />
           <div className="">
-            <Link
+           {  profileData.role !== "Accountant" && <Link
               to="/admin/franchise-management/add-franchise"
               className="px-2 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
             >
               + Add&nbsp;<span className="lg:inline-block hidden">User</span>
-            </Link>
+            </Link>}
           </div>
         </div>
 

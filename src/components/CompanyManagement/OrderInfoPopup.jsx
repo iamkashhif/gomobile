@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import PopupModal from "../Modal/Popup";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderById } from "../../rtk/orders/ordersThunks";
+import { getOrderById, updateOrderForProductItem } from "../../rtk/orders/ordersThunks";
 import CircularLoader from "../tables/Loader";
 
 const OrderPopup = ({ isModalOpen, handleCloseModal, orderId }) => {
@@ -26,6 +26,8 @@ const OrderPopup = ({ isModalOpen, handleCloseModal, orderId }) => {
 export default OrderPopup;
 
 const PurchaseOrder = ({ orderData, orderloading }) => {
+  const { profileData } = useSelector((state) => state.profile);
+  const dispatch = useDispatch()
   if (orderloading) {
     return <CircularLoader />;
   }
@@ -89,6 +91,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 border">Items</th>
+              <th className="px-4 py-2 border">Status</th>
               <th className="px-4 py-2 border">Quantity</th>
               <th className="px-4 py-2 border">Description</th>
               <th className="px-4 py-2 border">Price</th>
@@ -102,6 +105,46 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
                 <td className="px-4 py-2 border text-center">
                   {item.caridSKU}
                 </td>
+                <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs">
+                      <select
+                        name="asiggned"
+                        value={item.status}
+                        disabled={profileData.role === "Accountant"}
+                        // disabled=
+                        onChange={(e) => {
+                          const selectedValue = e.target.value;
+                          if (selectedValue !== "Status") {
+                            dispatch(
+                              updateOrderForProductItem({
+                                payload: {status: selectedValue},
+                                orderId: orderData?.id,
+                                itemId: item?.id,
+                              })
+                            );
+                          }
+                        }}
+                        className={`block md:w-32 py-2 px-1 text-sm rounded-md focus:outline-none sm:text-xs border border-gray-300`}
+                        // ${
+                        //   item.status === "Shipped"
+                        //     ? "bg-green-100 border-green-500"
+                        //     : item.status === "Pending"
+                        //     ? "bg-orange-100 border-orange-500"
+                        //     : "border-gray-300"
+                        // }
+                        // `}
+                      >
+                        {/* <option value="Created">Created</option> */}
+                        {/* <option value="Pending">Pending</option> */}
+                        {/* <option value="Completed">Completed</option> */}
+
+                        <option value="OnHold">OnHold</option>
+                        <option value="Ordered" disabled>
+                          Ordered
+                        </option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
                 <td className="px-4 py-2 border text-center">
                   {item.orderQty}
                 </td>
@@ -120,6 +163,9 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border text-center">
                   {item.cartIdSku}
+                </td>
+                <td className="px-4 py-2 border text-center">
+                  {item.caridSKU}
                 </td>
                 <td className="px-4 py-2 border text-center">
                   {item.quantity}
