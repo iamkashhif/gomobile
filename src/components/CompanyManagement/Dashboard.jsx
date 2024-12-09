@@ -16,7 +16,7 @@ const Dashboard = () => {
     (profileData.role === "Admin" || profileData.role === "Accountant")  && {
       id: 1,
       value: DashboardData?.userCount || "0",
-      title: "Total Users",
+      title: "Total Franchise",
     },
     { id: 2, value: DashboardData?.orderCount || "0", title: "Total Orders" },
     {
