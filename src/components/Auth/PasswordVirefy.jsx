@@ -1,65 +1,77 @@
-import React, { useState } from 'react';
-import logo from '/home_images/Logo.png';  // Adjust path as necessary
-import { useNavigate } from 'react-router-dom';
-import { post } from '../../../utils/ApiServices';
+import React, { useState } from "react";
+import logo from "/home_images/Logo.png"; // Adjust path as necessary
+import { useNavigate } from "react-router-dom";
+import { post } from "../../../utils/ApiServices";
+import CircularLoader from "../tables/Loader";
+import { toast } from "react-toastify";
 
 const PasswordVerify = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email) {
-      return setError("Please enter your email.");
+      toast.error("Please enter your email.");
+      return;
     }
     if (password !== confirmPassword) {
-      return setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
+      return;
     }
-
-    // Clear any previous error
-    setError('');
-
+  
     try {
-      const response = await post('/auth/reset-password', {
-        
-          email,
-          password,
-          token: localStorage.getItem("token") // Replace with the actual token
-        
-        // method: 'POST',
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // },
-        // body: JSON.stringify()
+      setLoading(true);
+      const response = await post("/auth/reset-password", {
+        email,
+        password,
+        token: localStorage.getItem("token"),
       });
-
-      // const data = await response.json();
-
-      if (response.ok) {
+  
+      console.log({ response });
+  
+      if (response.data.results === 200) {
+        toast.success("Password updated successfully!");
         setSuccessMessage("Password updated successfully!");
-        navigate('/admin'); // Redirect user to login page after success
+        navigate("/"); // Redirect user to another page
       } else {
-        setError(response.message || 'Failed to reset password. Please try again.');
+        // Show an error toast with the response message or a default message
+        toast.error(
+          response.message || "Failed to reset password. Please try again."
+        );
+        setError(
+          response.message || "Failed to reset password. Please try again."
+        );
       }
     } catch (error) {
-      setError("An error occurred. Please try again later.");
+      console.error(error);
+      toast.error(error.response.data.message || "An error occurred. Please try again later.");
+      // setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center p-2 z-50">
       <div className="relative w-full max-w-md max-h-full bg-white rounded-lg shadow">
         <div className="pt-1 md:pt-2 p-6">
           <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
-            <img className="w-24 lg:w-36 h-auto" src={logo} alt="Company Logo" />
+            <img
+              className="w-24 lg:w-36 h-auto"
+              src={logo}
+              alt="Company Logo"
+            />
           </div>
         </div>
         <div className="p-4 md:p-5">
@@ -95,7 +107,9 @@ const PasswordVerify = () => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-bold">Confirm Password</label>
+              <label className="block text-sm font-bold">
+                Confirm Password
+              </label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -113,13 +127,23 @@ const PasswordVerify = () => {
               </div>
             </div>
             {error && <span className="text-red-500 text-xs">{error}</span>}
-            {successMessage && <span className="text-green-500 text-xs">{successMessage}</span>}
+            {successMessage && (
+              <span className="text-green-500 text-xs">{successMessage}</span>
+            )}
             <div className="pt-4">
               <button
                 type="submit"
-                className="bg-customNavy w-full text-white rounded-lg px-5 py-2.5 text-center"
+                className="bg-customNavy w-full text-white rounded-lg px-5 py-2.5 text-center flex items-center justify-center"
+                disabled={loading} // Disable the button during loading
               >
-                Submit
+                {loading ? (
+                  <div className="flex items-center">
+                    <CircularLoader size="w-6 h-6" />
+                    <span className="ml-2">Please wait...</span>
+                  </div>
+                ) : (
+                  "Submit"
+                )}
               </button>
             </div>
           </form>

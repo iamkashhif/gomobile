@@ -191,7 +191,7 @@ import React from 'react'
 const AddNewCompany = () => {
   return (
     <div>
-      add new Order
+      add new Franchise
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchDashboard, fetchUser, fetchUsers, postUsers } from "./userThunks";
+import { fetchDashboard, fetchUser, fetchUsers, postUsers, updateUsers } from "./userThunks";
 
 // Async thunk to fetch users
 const initialState = {
@@ -9,9 +9,10 @@ const initialState = {
   error: null,
 
   userData: [],
-  userloading: false,
+  // userloading: false,
 
   DashboardData: [],
+  updateLoading: false,
   DashboardLoading: false,
 };
 
@@ -49,7 +50,8 @@ const usersSlice = createSlice({
 
       // get-single-user
       .addCase(fetchUser.pending, (state) => {
-        state.postloading = true;
+        // state.postloading = true;
+        state.userloading = true
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.userloading = false;
@@ -70,6 +72,16 @@ const usersSlice = createSlice({
       })
       .addCase(fetchDashboard.rejected, (state, action) => {
         state.DashboardLoading = false;
+        // state.DashboardData = action.payload;
+      })  .addCase(updateUsers.pending, (state) => {
+        state.updateLoading = true;
+      })
+      .addCase(updateUsers.fulfilled, (state, action) => {
+        state.updateLoading = false;
+        // state.DashboardData = action.payload;
+      })
+      .addCase(updateUsers.rejected, (state, action) => {
+        state.updateLoading = false;
         // state.DashboardData = action.payload;
       });
   },

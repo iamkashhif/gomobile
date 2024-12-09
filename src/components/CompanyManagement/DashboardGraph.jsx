@@ -114,7 +114,7 @@ const DashboardGraph = ({ role }) => {
       {/* Chart Section */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-4">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
-          User Growth Over Months
+        Orders Growth Over Months
         </h2>
         {DashboardLoading ? (
           <CircularLoader size="w-8 h-8" />

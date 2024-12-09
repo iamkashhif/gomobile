@@ -9,7 +9,8 @@ import { BsChevronDoubleRight, BsChevronLeft } from "react-icons/bs";
 import FirstSetForm from "../../components/FranchiseManagement/FirstSetForm";
 import axios from "axios";
 import { postUsers } from "../../rtk/users/userThunks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import CircularLoader from "../../components/tables/Loader";
 // import FranchiseOwnerForm from "../../components/FranchiseManagement/FranchiseOwnerForm";
 // import FranchiseAddressForm from "../../components/FranchiseManagement/FranchiseAddressForm";
 // import VehicleInfoForm from "../../components/FranchiseManagement/VehicleInfoForm";
@@ -28,6 +29,7 @@ const steps = [
 const AddNewFranchise = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { postloading } = useSelector((state) => state.users);
 
   // const [showPopup, setShowPopup] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -53,7 +55,9 @@ const AddNewFranchise = () => {
       {/* Add New Company Header */}
       <div className="sticky top-[50px] py-2 bg-white flex justify-between Franchise mt-7">
         <div className="font-opensans mt-3">
-          <p className="text-customBlack text-md font-bold">Add New User</p>
+          <p className="text-customBlack text-md font-bold">
+            Add New Franchise
+          </p>
           {/* <p className="text-xs text-customTextGrey2">
             {steps[currentStep].title}{" "}
           </p> */}
@@ -107,9 +111,19 @@ const AddNewFranchise = () => {
         <div>
           <button
             onClick={handleNext}
-            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
+            disabled={postloading}
+            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md flex items-center justify-center"
           >
-            {currentStep === steps.length - 1 ? "Add" : "Next"}
+            {postloading ? (
+              <div className="flex items-center">
+                <CircularLoader size="w-4 h-4" />
+                <span className="ml-2">Please wait...</span>
+              </div>
+            ) : currentStep === steps.length - 1 ? (
+              "Add"
+            ) : (
+              "Next"
+            )}
           </button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { post } from "../../../utils/ApiServices";
+import CircularLoader from "../tables/Loader";
 
 const Login = ({ setActiveComponent }) => {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ const Login = ({ setActiveComponent }) => {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const handleInputChange = (e) => {
@@ -143,10 +143,17 @@ const Login = ({ setActiveComponent }) => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="bg-customNavy w-full text-white rounded-lg px-5 py-2.5 text-center"
+                className="bg-customNavy w-full text-white rounded-lg px-5 py-2.5 text-center flex items-center justify-center"
                 disabled={submitted}
               >
-                Login
+                {submitted ? (
+                  <div className="flex items-center">
+                    <CircularLoader size="w-6 h-6" />
+                    <span className="ml-2">Please wait...</span>
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
           </form>

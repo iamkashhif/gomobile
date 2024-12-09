@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import logo from "/home_images/Logo.png";
 import { useNavigate } from "react-router-dom";
 import { post } from "../../../utils/ApiServices";
+import CircularLoader from "../tables/Loader";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [step, setStep] = useState(1); // 1 for email, 2 for OTP
@@ -28,6 +30,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
+      setLoading(true);
       const response = await post(
         `/auth/forgotPassword`,
         // {
@@ -35,7 +38,7 @@ const ForgotPassword = () => {
         //   headers: { "Content-Type": "application/json" },
         //   body: JSON.stringify({  }),
         // }
-        {email}
+        { email }
       );
 
       // const result = await response.json();
@@ -47,6 +50,8 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,6 +65,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
+      setLoading(true);
       const response = await post(
         `/auth/verify-otp/email`,
         // {
@@ -80,6 +86,8 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -152,9 +160,19 @@ const ForgotPassword = () => {
             <div className="pt-4">
               <button
                 type="submit"
-                className="bg-customNavy w-full text-white hover:bg-navy-600 hover:cursor-pointer focus:ring-4 focus:outline-none rounded-lg text-sm px-5 py-2.5 text-center"
+                className={`bg-customNavy w-full text-white hover:bg-navy-600 hover:cursor-pointer focus:ring-4 focus:outline-none rounded-lg text-sm px-5 py-2.5 text-center flex items-center justify-center`}
+                disabled={loading} // Disable the button during loading
               >
-                {step === 1 ? "Send OTP" : "Verify OTP"}
+                {loading ? (
+                  <div className="flex items-center">
+                    <CircularLoader size="w-6 h-6" />
+                    <span className="ml-2">Please wait...</span>
+                  </div>
+                ) : step === 1 ? (
+                  "Send OTP"
+                ) : (
+                  "Verify OTP"
+                )}
               </button>
             </div>
           </form>

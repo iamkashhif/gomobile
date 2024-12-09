@@ -173,7 +173,7 @@ const CompanyManagementHome = () => {
               />
             </div>
 
-          { profileData.role === "Admin" || profileData.role === "Accountant" && <div className="relative">
+          { (profileData.role === "Admin" || profileData.role === "Accountant") && <div className="relative">
               {profileData?.role === "Admin" && (
                 <select
                   value={searchCriteria.franchise}
@@ -220,7 +220,7 @@ const CompanyManagementHome = () => {
               />
             </div>
 
-            <div className="relative">
+            {/* <div className="relative">
               <button
                 className={`border-b-2 text-xs font-semibold p-2 w-full rounded ${
                   selectedItems.length === 0
@@ -232,7 +232,7 @@ const CompanyManagementHome = () => {
               >
                 Generate Invoice
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 

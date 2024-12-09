@@ -14,6 +14,7 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
   const { profileData } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [Index, setIndex] = useState();
   const [isHovered, setIsHovered] = useState(false);
 
   const [copied, setCopied] = useState(false);
@@ -129,12 +130,12 @@ const SupplierManagementTable = ({ supplierData, supplierLoading }) => {
                       </p>
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-xs text-center">
-                      <div className="flex items-center justify-center h-full space-x-2">
-                        <span className="font-mono leading-none">{`${item.id.slice(
+                      <div className="flex items-center justify-center h-full space-x-2" onClick={() =>  setIndex(index)}>
+                        <span className="font-mono leading-none" >{`${item.id.slice(
                           0,
                           5
                         )}...`}</span>
-                        {copied ? (
+                        {(copied && index === Index )? (
                           <AiOutlineCheck
                             size={24}
                             className="text-green-500 animate-pulse"

@@ -10,6 +10,7 @@ import {
   getSupplierById,
   updateSuppliers,
 } from "../../rtk/supplier/supplierThunks";
+import CircularLoader from "../../components/tables/Loader";
 
 const steps = [{ title: "First Set", component: AddNewSupplierForm }];
 
@@ -18,7 +19,8 @@ const AddNewSupplier = () => {
   const dispatch = useDispatch();
   const [currentStep, _setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
-  const { supplierById } = useSelector((state) => state.suppliers);
+  const { supplierById, supplierByIdLoading, updateAndCreateLoadings } =
+    useSelector((state) => state.suppliers);
   const { id } = useParams();
 
   const handleSubmit = async (e) => {
@@ -43,14 +45,14 @@ const AddNewSupplier = () => {
   useEffect(() => {
     if (id && supplierById) {
       setFormData((prevState) => {
-        const {authToken: id, ...rest } = supplierById
-        const newFormData = { ...rest,id };
+        const { authToken: id, ...rest } = supplierById;
+        const newFormData = { ...rest, id };
         // delete newFormData.id;
         return newFormData;
       });
     }
   }, [id, supplierById]);
-  console.log({supplierById})
+  console.log({ supplierById });
 
   // Get the current form component based on the current step
   const CurrentForm = steps[currentStep].component;
@@ -71,7 +73,13 @@ const AddNewSupplier = () => {
         </div>
       </div>
       {/* Render the current form step */}
-      <CurrentForm formData={formData} setFormData={setFormData} />
+      {supplierByIdLoading ? (
+        <div className="w-full h-full flex items-center justify-center my-32">
+          <CircularLoader />
+        </div>
+      ) : (
+        <CurrentForm formData={formData} setFormData={setFormData} />
+      )}
       {/* Button Section */}
       <div className="mt-6 flex ">
         <div className="flex justify-between items-center w-full">
@@ -86,9 +94,19 @@ const AddNewSupplier = () => {
         <div>
           <button
             onClick={handleSubmit}
-            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
+            disabled={updateAndCreateLoadings}
+            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md flex items-center justify-center"
           >
-            {id ? "Update" : "Add"}
+            {updateAndCreateLoadings ? (
+              <div className="flex items-center space-x-2">
+                <CircularLoader size="w-4 h-4" />
+                <span className="whitespace-nowrap">Please wait...</span>
+              </div>
+            ) : id ? (
+              "Update"
+            ) : (
+              "Add"
+            )}
           </button>
         </div>
       </div>

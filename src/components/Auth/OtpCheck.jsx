@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "/home_images/Logo.png";
 import { useNavigate, Link } from "react-router-dom";
 import { post } from "../../../utils/ApiServices";
+import CircularLoader from "../tables/Loader";
 
 const OtpCheck = () => {
   const navigate = useNavigate();
@@ -28,17 +29,16 @@ const OtpCheck = () => {
     setLoading(true);
 
     try {
-      const response = await post(
-        `/auth/forgotPassword`,
-        email
-      );
+      const response = await post(`/auth/forgotPassword`, email);
 
       // const result = await response.json();
 
       if (response.status === 200) {
         navigate("/otp-verification"); // Navigate if OTP is sent successfully
       } else {
-        setError(response.data.message || "An error occurred. Please try again.");
+        setError(
+          response.data.message || "An error occurred. Please try again."
+        );
       }
     } catch (error) {
       setError(
@@ -96,7 +96,14 @@ const OtpCheck = () => {
                   className="bg-customNavy w-full text-white hover:bg-navy-600 hover:cursor-pointer focus:ring-4 focus:outline-none rounded-lg text-sm px-5 py-2.5 text-center"
                   disabled={loading}
                 >
-                  {loading ? "Sending OTP..." : "Submit"}
+                  {loading ? (
+                    <div className="flex items-center">
+                      <CircularLoader size="w-6 h-6" />
+                      <span className="ml-2">Sending OTP...</span>
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </Link>
             </div>

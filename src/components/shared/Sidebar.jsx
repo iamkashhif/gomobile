@@ -32,7 +32,7 @@ const Sidebar = () => {
   const menu = [
     { label: "Dashboard", path: "/admin", icon: <MdDashboard /> },
       (profileData.role === "Admin" || profileData.role === "Accountant") && {
-      label: "User  ",
+      label: "Franchise",
       path: "/admin/franchise-management",
       icon: (
         <svg
@@ -222,7 +222,7 @@ const Sidebar = () => {
                       </p>
                     </div>
                     <hr className="border-gray-200 dark:border-gray-200" />
-                    <a
+                    {/* <a
                       href="#"
                       className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-600 "
                     >
@@ -233,7 +233,7 @@ const Sidebar = () => {
                       className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-600 "
                     >
                       Settings
-                    </a>
+                    </a> */}
                     <div
                       onClick={() => {
                         localStorage.clear();

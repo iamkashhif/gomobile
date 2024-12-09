@@ -9,6 +9,7 @@ import { BsChevronDoubleRight, BsChevronLeft } from "react-icons/bs";
 import FirstSetForm from "../../components/FranchiseManagement/FirstSetForm";
 import { fetchUser, postUsers, updateUsers } from "../../rtk/users/userThunks";
 import { useDispatch, useSelector } from "react-redux";
+import CircularLoader from "../../components/tables/Loader";
 
 const steps = [
   { title: "First Set", component: FirstSetForm },
@@ -29,7 +30,9 @@ const EditFranchise = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
 
-  const { userData, userLoading } = useSelector((state) => state.users);
+  const { userData, updateLoading, userloading } = useSelector(
+    (state) => state.users
+  );
 
   const handleNext = async (e) => {
     e.preventDefault();
@@ -60,7 +63,7 @@ const EditFranchise = () => {
       {/* Add New Company Header */}
       <div className="sticky top-[50px] py-2 bg-white flex justify-between Franchise mt-7">
         <div className="font-opensans mt-3">
-          <p className="text-customBlack text-md font-bold">Edit User</p>
+          <p className="text-customBlack text-md font-bold">Edit Franchise</p>
         </div>
 
         <div className="flex items-center bg-customGrey5 px-3 py-2 rounded-md mt-4 space-x-2 text-customTextGrey2 font-opensans font-semibold text-xs">
@@ -70,7 +73,13 @@ const EditFranchise = () => {
         </div>
       </div>
 
-      <CurrentForm formData={formData} setFormData={setFormData} id={id} />
+      {userloading ? (
+        <div className="w-full h-full flex items-center justify-center my-32">
+          <CircularLoader />
+        </div>
+      ) : (
+        <CurrentForm formData={formData} setFormData={setFormData} id={id} />
+      )}
 
       {/* Button Section */}
       <div className="mt-6 flex justify-between">
@@ -86,9 +95,17 @@ const EditFranchise = () => {
         <div>
           <button
             onClick={handleNext}
-            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md"
+            disabled={updateLoading}
+            className="px-14 mx-5 py-2 text-xs font-semibold text-white bg-customNavy rounded-md flex items-center justify-center"
           >
-            Edit & Save
+            {updateLoading ? (
+              <div className="flex items-center">
+                <CircularLoader size="w-4 h-4" />
+                <span className="ml-2">Please wait...</span>
+              </div>
+            ) : (
+              "Edit & Save"
+            )}
           </button>
         </div>
       </div>

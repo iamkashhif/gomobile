@@ -18,7 +18,7 @@ const FranchiseManagementHeader = () => {
           />
         </svg>
         <p className="md:text-md text-md ml-1.5 text-customTextGrey1 font-opensans font-bold">
-          User Management
+        Franchise Management
         </p>
         {/* <span className="text-customTextGrey2 md:block hidden relative md:mx-16 text-xs">
           User List
