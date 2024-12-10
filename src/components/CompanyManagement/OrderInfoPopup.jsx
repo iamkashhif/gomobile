@@ -52,7 +52,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
         <div>
           <h2 className="text-xl font-semibold">Purchase Order</h2>
           <p className="text-sm">{`P.O. ${
-            orderData?.internalOrderId
+            orderData?.customerOrderNumber
           } Date: ${new Date(orderData.orderDate).toLocaleDateString()}`}</p>
           <div className="mb-6 mt-2">
             <h3 className="text-lg font-medium">Shipping Method</h3>
