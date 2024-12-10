@@ -10,7 +10,7 @@ const PopupModal = ({ id, isOpen, onClose, children }) => {
   return ReactDOM.createPortal(
     <div
       id={id}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 "
     >
       {/* Modal Background */}
       <div
@@ -21,7 +21,7 @@ const PopupModal = ({ id, isOpen, onClose, children }) => {
       ></div>
 
       {/* Modal Content */}
-      <div className="bg-white rounded shadow-lg p-6 relative z-10">
+      <div className="bg-white rounded shadow-lg p-6 relative z-10 max-h-[99svh] overflow-auto">
         {children}
         {/* <button
           onClick={onClose}

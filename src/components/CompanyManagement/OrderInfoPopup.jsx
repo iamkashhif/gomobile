@@ -33,7 +33,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
   }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
+    <div className="p-4 max-w-4xl mx-auto bg-white shadow-lg  rounded-lg">
       {/* Header */}
       
       {/* <div className="flex justify-between items-center mb-6">
@@ -56,7 +56,7 @@ const PurchaseOrder = ({ orderData, orderloading }) => {
           } Date: ${new Date(orderData.orderDate).toLocaleDateString()}`}</p>
           <div className="mb-6 mt-2">
             <h3 className="text-lg font-medium">Shipping Method</h3>
-            <p>{orderData.shippingAddresses[0]?.shippingMethod}</p>
+            <p>{orderData.specialRequest}</p>
           </div>
         </div>
 
